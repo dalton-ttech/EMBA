@@ -90,16 +90,19 @@ export const Activities = {
                   name: 'activityType',
                   label: '活动类型',
                   type: 'select',
-                  defaultValue: 'classEvent',
+                  defaultValue: 'gobi',
                   options: [
-                    { label: '班级活动', value: 'classEvent' },
-                    { label: '主题沙龙', value: 'salon' },
-                    { label: '企业参访', value: 'companyVisit' },
-                    { label: '课程学习', value: 'course' },
-                    { label: '同学分享', value: 'sharing' },
+                    { label: '戈壁', value: 'gobi' },
+                    { label: '读书会', value: 'reading' },
+                    { label: '企业参访', value: 'visit' },
+                    { label: '晚宴', value: 'dinner' },
+                    { label: '嘉宾对话', value: 'talk' },
+                    { label: '公益', value: 'charity' },
+                    { label: '毕业季', value: 'commencement' },
                     { label: '其他', value: 'other' }
                   ],
                   admin: {
+                    description: '对应前台活动归档页的主题筛选。',
                     width: '50%'
                   }
                 },

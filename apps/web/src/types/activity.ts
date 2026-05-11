@@ -1,4 +1,10 @@
 export type ActivityTheme =
+  | 'gobi'
+  | 'reading'
+  | 'visit'
+  | 'dinner'
+  | 'talk'
+  | 'commencement'
   | 'forum'
   | 'studyTour'
   | 'reunion'

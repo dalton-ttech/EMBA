@@ -23,9 +23,9 @@ const topicTabs = [
   { value: '读书会', label: '读书会 · Reading' },
   { value: '企业参访', label: '企业参访 · Visit' },
   { value: '晚宴', label: '晚宴 · Dinner' },
-  { value: '嘉宾', label: '嘉宾对话 · Talk' },
+  { value: '嘉宾对话', label: '嘉宾对话 · Talk' },
   { value: '公益', label: '公益 · Charity' },
-  { value: '毕业', label: '毕业季 · Commencement' }
+  { value: '毕业季', label: '毕业季 · Commencement' }
 ] as const
 
 type TopicFilter = (typeof topicTabs)[number]['value']
@@ -74,7 +74,7 @@ const placeholderCards: ActivityCardItem[] = [
     year: 2027,
     date: '2027·06·--',
     number: '037',
-    topic: '毕业',
+    topic: '毕业季',
     title: (
       <>
         毕业季 / <em>编辑部整理中...</em>
@@ -112,7 +112,8 @@ function activityTopic(activity: ActivityListItem) {
   if (/公益|捐赠|Charity/i.test(searchable)) return '公益'
   if (/参访|访学|Visit/i.test(searchable)) return '企业参访'
   if (/读书|Reading/i.test(searchable)) return '读书会'
-  if (/嘉宾|对话|Talk|Dialogue/i.test(searchable)) return '嘉宾'
+  if (/嘉宾|对话|Talk|Dialogue/i.test(searchable)) return '嘉宾对话'
+  if (/毕业|Commencement/i.test(searchable)) return '毕业季'
 
   return activity.themeLabel
 }

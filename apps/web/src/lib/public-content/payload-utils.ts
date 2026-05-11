@@ -294,15 +294,28 @@ export function getThemeMetadata(activity: PayloadActivity) {
   const type = activity.activityType ?? 'other'
 
   const themeMap = {
-    classEvent: { theme: 'other' as const, label: '班级活动' },
-    salon: { theme: 'salon' as const, label: '主题沙龙' },
-    companyVisit: { theme: 'studyTour' as const, label: '企业参访' },
-    course: { theme: 'publicClass' as const, label: '课程学习' },
-    sharing: { theme: 'reunion' as const, label: '同学分享' },
+    gobi: { theme: 'gobi' as const, label: '戈壁' },
+    reading: { theme: 'reading' as const, label: '读书会' },
+    visit: { theme: 'visit' as const, label: '企业参访' },
+    dinner: { theme: 'dinner' as const, label: '晚宴' },
+    talk: { theme: 'talk' as const, label: '嘉宾对话' },
+    charity: { theme: 'charity' as const, label: '公益' },
+    commencement: { theme: 'commencement' as const, label: '毕业季' },
     other: { theme: 'other' as const, label: '其他活动' }
   }
 
-  const base = themeMap[type]
+  const legacyThemeMap = {
+    classEvent: { theme: 'other' as const, label: '其他活动' },
+    salon: { theme: 'talk' as const, label: '嘉宾对话' },
+    companyVisit: { theme: 'visit' as const, label: '企业参访' },
+    course: { theme: 'reading' as const, label: '读书会' },
+    sharing: { theme: 'reading' as const, label: '读书会' }
+  }
+
+  const base =
+    type in themeMap
+      ? themeMap[type as keyof typeof themeMap]
+      : legacyThemeMap[type as keyof typeof legacyThemeMap] ?? themeMap.other
 
   return {
     theme: base.theme,

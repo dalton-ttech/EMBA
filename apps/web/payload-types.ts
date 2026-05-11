@@ -265,7 +265,10 @@ export interface Activity {
    * 用于列表卡片和详情页导语，建议 80-150 字。
    */
   summary: string;
-  activityType?: ('classEvent' | 'salon' | 'companyVisit' | 'course' | 'sharing' | 'other') | null;
+  /**
+   * 对应前台活动归档页的主题筛选。
+   */
+  activityType?: ('gobi' | 'reading' | 'visit' | 'dinner' | 'talk' | 'charity' | 'commencement' | 'other') | null;
   /**
    * 活动主线或栏目名称，例如“产业参访”“同学分享会”。
    */
