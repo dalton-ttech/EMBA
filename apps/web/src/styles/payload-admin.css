@@ -18,7 +18,41 @@
       sans-serif;
   }
 
+  html[data-theme='dark'] {
+    --theme-bg: var(--emba-admin-bg);
+    --theme-input-bg: #fffefa;
+    --theme-text: #2f2922;
+    --theme-border-color: var(--emba-admin-border);
+    --theme-elevation-0: #fffefa;
+    --theme-elevation-50: #f3eee5;
+    --theme-elevation-100: #e9e1d5;
+    --theme-elevation-150: #ded4c6;
+    --theme-elevation-200: #d2c6b6;
+    --theme-elevation-250: #c8baa7;
+    --theme-elevation-300: #b9ab99;
+    --theme-elevation-400: #85786b;
+    --theme-elevation-500: #6f6459;
+    --theme-elevation-600: #5b5148;
+    --theme-elevation-700: #483f37;
+    --theme-elevation-800: #3c342c;
+    --theme-elevation-900: #2f2922;
+    --theme-elevation-1000: #171411;
+  }
+
+  html[data-theme='dark'] body {
+    background: var(--emba-admin-bg);
+    color: #2f2922;
+    font-family:
+      'Noto Sans SC',
+      'PingFang SC',
+      'Microsoft YaHei',
+      system-ui,
+      sans-serif;
+  }
+
   html[data-theme='light'] .template-default,
+  html[data-theme='dark'] .template-default,
+  html[data-theme='dark'] .template-default__wrap,
   html[data-theme='light'] .template-default__wrap {
     background: var(--emba-admin-bg);
   }
@@ -27,6 +61,12 @@
     background: #fbfaf6;
     border-right-color: var(--emba-admin-border);
     box-shadow: 8px 0 24px rgb(57 45 28 / 0.04);
+  }
+
+  html[data-theme='dark'] .nav {
+    background: #d8d2cb;
+    border-right-color: #bcb2a7;
+    box-shadow: 8px 0 24px rgb(57 45 28 / 0.06);
   }
 
   .nav__scroll {
@@ -76,6 +116,12 @@
     backdrop-filter: blur(12px);
   }
 
+  html[data-theme='dark'] .doc-controls {
+    background: rgb(251 250 246 / 0.94);
+    border-bottom: 1px solid var(--emba-admin-border);
+    backdrop-filter: blur(12px);
+  }
+
   .doc-controls__content,
   .doc-controls__controls {
     gap: 12px;
@@ -102,6 +148,10 @@
   }
 
   html[data-theme='light'] .group-field--top-level,
+  html[data-theme='dark'] .group-field--top-level,
+  html[data-theme='dark'] .collapsible-field,
+  html[data-theme='dark'] .array-field,
+  html[data-theme='dark'] .blocks-field,
   html[data-theme='light'] .collapsible-field,
   html[data-theme='light'] .array-field,
   html[data-theme='light'] .blocks-field {
@@ -144,8 +194,10 @@
   textarea,
   select,
   .rs__control {
+    background-color: #fffefa;
     border-color: #cfc7b9;
     border-radius: 8px;
+    color: #2f2922;
   }
 
   textarea {
@@ -162,6 +214,65 @@
   .btn--style-subtle {
     --box-shadow: inset 0 0 0 1px #bdb3a4;
     --hover-box-shadow: inset 0 0 0 1px #8d806f;
+  }
+
+  .file-field,
+  .bulk-upload--add-files .dropzone,
+  .upload-field-card {
+    background: #fffefa;
+    border: 1px solid var(--emba-admin-border);
+    border-radius: 8px;
+  }
+
+  .file-field .dropzone,
+  .upload .dropzone {
+    background: #fffefa;
+    border: 2px dashed #a88968;
+    border-radius: 8px;
+    min-height: 148px;
+  }
+
+  .file-field__dropzoneContent,
+  .upload__dropzoneContent {
+    align-items: center;
+    gap: 16px;
+  }
+
+  .file-field__dragAndDropText,
+  .upload__dragAndDropText,
+  .bulk-upload--add-files__dragAndDropText {
+    color: #6b5f52;
+    font-weight: 600;
+    text-transform: none;
+  }
+
+  .file-field__dropzoneButtons .btn,
+  .file-field__dropzoneButtons button,
+  .upload__dropzoneContent__buttons .btn,
+  .bulk-upload--add-files .btn,
+  .list-header__title-actions .btn {
+    --bg-color: #7a4e2a;
+    --color: #fffefa;
+    --hover-bg: #5f3d22;
+    border-radius: 8px;
+    font-weight: 700;
+  }
+
+  .file-field__filename,
+  .file-field__remote-file {
+    background: #fffefa;
+    color: #2f2922;
+  }
+
+  .file-field__file-selected {
+    background: #fffefa;
+    border: 1px solid var(--emba-admin-border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .file-field__file-adjustments {
+    background: #f8f3eb;
   }
 
   @media (max-width: 1024px) {

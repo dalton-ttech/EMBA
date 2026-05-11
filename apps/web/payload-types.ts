@@ -171,13 +171,25 @@ export interface User {
 export interface Media {
   id: number;
   /**
+   * 用于素材库筛选和整理。活动详情中的相册条目仍可单独选择这些素材。
+   */
+  albumCategory?: ('gobi' | 'campus' | 'visit' | 'banquet' | 'reading' | 'people' | 'other') | null;
+  /**
+   * 可选。把素材挂到某一次活动，后续编辑活动相册时更容易查找。
+   */
+  relatedActivity?: (number | null) | Activity;
+  /**
+   * 例如：合影、课堂、晚宴、深圳、戈壁。用于后台检索和人工整理。
+   */
+  keywords?: string | null;
+  /**
    * 只有设为“允许公开读取”的素材才会通过公开 API 暴露。草稿活动素材建议保持仅后台可见。
    */
   visibility: 'private' | 'public';
   /**
-   * 简短描述图片或视频封面内容，用于无障碍阅读和素材识别。
+   * 可后补。简短描述图片或视频封面内容，用于无障碍阅读和素材识别。
    */
-  alt: string;
+  alt?: string | null;
   caption?: string | null;
   /**
    * 记录摄影师、供稿人、机构、公众号或档案来源。
@@ -232,96 +244,6 @@ export interface Media {
       filename?: string | null;
     };
   };
-}
-/**
- * 维护班级人物、活动嘉宾、主持人和同学资料，供活动纪要反复引用。
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "people".
- */
-export interface Person {
-  id: number;
-  name: string;
-  /**
-   * 可选的英文唯一标识，后续公开人物页会用到。
-   */
-  slug?: string | null;
-  roleCategory?: ('classmate' | 'guest' | 'faculty' | 'host' | 'staff' | 'other') | null;
-  title?: string | null;
-  /**
-   * 填写所在企业、学校、协会或项目名称。
-   */
-  organization?: string | null;
-  /**
-   * 用于活动详情页的人物介绍，建议控制在 100 字以内。
-   */
-  bio?: string | null;
-  avatar?: (number | null) | Media;
-  profileLinks?:
-    | {
-        label: string;
-        url: string;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * 只有“已发布”且“允许公开展示”的人物会被前台公开读取。
-   */
-  status: 'draft' | 'review' | 'published' | 'archived';
-  isPublic?: boolean | null;
-  sortOrder?: number | null;
-  /**
-   * 仅后台可见，用于记录沟通、授权或编辑备注。
-   */
-  internalNotes?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * 登记外站视频的结构化信息和封面预览，不保存 iframe、script 或任意 HTML。
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "external-videos".
- */
-export interface ExternalVideo {
-  id: number;
-  title: string;
-  provider: 'wechatChannels' | 'tencentVideo' | 'bilibili' | 'youku' | 'douyin' | 'youtube' | 'vimeo' | 'other';
-  /**
-   * 可选，填写平台侧视频 ID，便于后续生成预览或迁移。
-   */
-  providerId?: string | null;
-  /**
-   * 粘贴视频页面链接，不要粘贴 iframe、script 或任意 HTML。
-   */
-  sourceUrl: string;
-  /**
-   * 例如 03:20 或 1:12:30。
-   */
-  duration?: string | null;
-  language?: string | null;
-  captionStatus?: ('unknown' | 'none' | 'captioned' | 'transcribed') | null;
-  /**
-   * 优先上传已确认版权的封面图，前台用它显示视频预览。
-   */
-  coverImage?: (number | null) | Media;
-  /**
-   * 记录封面画面重点，例如“论坛合影”“嘉宾演讲特写”。
-   */
-  coverPreviewNote?: string | null;
-  relatedActivities?: (number | Activity)[] | null;
-  /**
-   * 只有“已发布”的视频会被前台公开读取。
-   */
-  status: 'draft' | 'review' | 'published' | 'archived';
-  publishedAt?: string | null;
-  /**
-   * 记录视频授权、来源或公开展示限制。
-   */
-  rightsNote?: string | null;
-  sourceNote?: string | null;
-  updatedAt: string;
-  createdAt: string;
 }
 /**
  * 像填写公众号推文一样，按固定模板整理活动标题、时间地点、正文、嘉宾、图集、视频和延伸阅读。
@@ -556,6 +478,96 @@ export interface Activity {
   createdAt: string;
 }
 /**
+ * 维护班级人物、活动嘉宾、主持人和同学资料，供活动纪要反复引用。
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "people".
+ */
+export interface Person {
+  id: number;
+  name: string;
+  /**
+   * 可选的英文唯一标识，后续公开人物页会用到。
+   */
+  slug?: string | null;
+  roleCategory?: ('classmate' | 'guest' | 'faculty' | 'host' | 'staff' | 'other') | null;
+  title?: string | null;
+  /**
+   * 填写所在企业、学校、协会或项目名称。
+   */
+  organization?: string | null;
+  /**
+   * 用于活动详情页的人物介绍，建议控制在 100 字以内。
+   */
+  bio?: string | null;
+  avatar?: (number | null) | Media;
+  profileLinks?:
+    | {
+        label: string;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * 只有“已发布”且“允许公开展示”的人物会被前台公开读取。
+   */
+  status: 'draft' | 'review' | 'published' | 'archived';
+  isPublic?: boolean | null;
+  sortOrder?: number | null;
+  /**
+   * 仅后台可见，用于记录沟通、授权或编辑备注。
+   */
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * 登记外站视频的结构化信息和封面预览，不保存 iframe、script 或任意 HTML。
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "external-videos".
+ */
+export interface ExternalVideo {
+  id: number;
+  title: string;
+  provider: 'wechatChannels' | 'tencentVideo' | 'bilibili' | 'youku' | 'douyin' | 'youtube' | 'vimeo' | 'other';
+  /**
+   * 可选，填写平台侧视频 ID，便于后续生成预览或迁移。
+   */
+  providerId?: string | null;
+  /**
+   * 粘贴视频页面链接，不要粘贴 iframe、script 或任意 HTML。
+   */
+  sourceUrl: string;
+  /**
+   * 例如 03:20 或 1:12:30。
+   */
+  duration?: string | null;
+  language?: string | null;
+  captionStatus?: ('unknown' | 'none' | 'captioned' | 'transcribed') | null;
+  /**
+   * 优先上传已确认版权的封面图，前台用它显示视频预览。
+   */
+  coverImage?: (number | null) | Media;
+  /**
+   * 记录封面画面重点，例如“论坛合影”“嘉宾演讲特写”。
+   */
+  coverPreviewNote?: string | null;
+  relatedActivities?: (number | Activity)[] | null;
+  /**
+   * 只有“已发布”的视频会被前台公开读取。
+   */
+  status: 'draft' | 'review' | 'published' | 'archived';
+  publishedAt?: string | null;
+  /**
+   * 记录视频授权、来源或公开展示限制。
+   */
+  rightsNote?: string | null;
+  sourceNote?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
@@ -670,6 +682,9 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "media_select".
  */
 export interface MediaSelect<T extends boolean = true> {
+  albumCategory?: T;
+  relatedActivity?: T;
+  keywords?: T;
   visibility?: T;
   alt?: T;
   caption?: T;

@@ -9,9 +9,9 @@ export const Media = {
     plural: '媒体素材'
   },
   admin: {
-    useAsTitle: 'alt',
+    useAsTitle: 'filename',
     group: CMS_COLLECTION_GROUPS.content,
-    defaultColumns: ['alt', 'mimeType', 'updatedAt'],
+    defaultColumns: ['filename', 'albumCategory', 'relatedActivity', 'visibility', 'updatedAt'],
     description: '公开图片、视频和档案素材库，供内容发布与活动资料复用。'
   },
   access: {
@@ -21,6 +21,10 @@ export const Media = {
     delete: canManageMedia
   },
   upload: {
+    adminThumbnail: 'thumbnail',
+    bulkUpload: true,
+    displayPreview: true,
+    focalPoint: true,
     staticDir: 'uploads',
     imageSizes: [
       {
@@ -46,6 +50,42 @@ export const Media = {
   },
   fields: [
     {
+      name: 'albumCategory',
+      label: '相册分类',
+      type: 'select',
+      options: [
+        { label: '戈壁挑战赛 / Ultra Gobi', value: 'gobi' },
+        { label: '课堂与校园', value: 'campus' },
+        { label: '企业参访 / 游学', value: 'visit' },
+        { label: '宴会聚会', value: 'banquet' },
+        { label: '读书分享', value: 'reading' },
+        { label: '人物合影', value: 'people' },
+        { label: '其他素材', value: 'other' }
+      ],
+      index: true,
+      admin: {
+        description: '用于素材库筛选和整理。活动详情中的相册条目仍可单独选择这些素材。'
+      }
+    },
+    {
+      name: 'relatedActivity',
+      label: '关联活动',
+      type: 'relationship',
+      relationTo: 'activities',
+      index: true,
+      admin: {
+        description: '可选。把素材挂到某一次活动，后续编辑活动相册时更容易查找。'
+      }
+    },
+    {
+      name: 'keywords',
+      label: '素材关键词',
+      type: 'text',
+      admin: {
+        description: '例如：合影、课堂、晚宴、深圳、戈壁。用于后台检索和人工整理。'
+      }
+    },
+    {
       name: 'visibility',
       label: '公开可见性',
       type: 'select',
@@ -64,9 +104,8 @@ export const Media = {
       name: 'alt',
       label: '替代文本',
       type: 'text',
-      required: true,
       admin: {
-        description: '简短描述图片或视频封面内容，用于无障碍阅读和素材识别。'
+        description: '可后补。简短描述图片或视频封面内容，用于无障碍阅读和素材识别。'
       }
     },
     {

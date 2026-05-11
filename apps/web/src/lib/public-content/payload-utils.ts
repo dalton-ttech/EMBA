@@ -110,7 +110,7 @@ export function toPublicMedia(value?: number | PayloadMedia | null): ActivityMed
   return {
     id: String(value.id),
     src: value.url,
-    alt: value.alt,
+    alt: value.alt ?? value.filename ?? 'EMBA 活动素材',
     width: value.width ?? undefined,
     height: value.height ?? undefined,
     caption: value.caption ?? undefined,
