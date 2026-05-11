@@ -1,0 +1,37 @@
+{
+  "name": "@emba/web",
+  "version": "0.9.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint . --max-warnings=0",
+    "typecheck": "tsc --noEmit",
+    "payload": "payload",
+    "payload:types": "payload generate:types",
+    "payload:migrate": "payload migrate"
+  },
+  "dependencies": {
+    "@payloadcms/db-postgres": "3.83.0",
+    "@payloadcms/next": "3.83.0",
+    "@payloadcms/richtext-lexical": "3.83.0",
+    "graphql": "16.9.0",
+    "next": "16.2.3",
+    "payload": "3.83.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "sharp": "0.33.5"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "4.1.11",
+    "@types/node": "20.16.0",
+    "@types/react": "19.1.9",
+    "@types/react-dom": "19.1.7",
+    "eslint": "9.32.0",
+    "eslint-config-next": "16.2.3",
+    "tailwindcss": "4.1.11",
+    "typescript": "5.8.3"
+  }
+}

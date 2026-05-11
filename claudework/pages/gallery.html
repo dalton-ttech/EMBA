@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>相册 · HKU-PKU EMBA 8A-194 班级档案馆</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="globals.css" />
+  <style>
+    .gh { padding: 80px var(--pad-page) 32px; border-bottom: 1px solid var(--rule); }
+    .gh-inner { max-width: var(--container-wide); margin: 0 auto; }
+    .gh-row { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; }
+    .gh h1 { font-size: clamp(2.5rem, 6vw, 6rem); line-height: 0.95; letter-spacing: var(--tracking-display); }
+    .gh h1 em { font-style: italic; color: var(--accent); }
+    .gh .lede { color: var(--ink-2); max-width: 56ch; margin-top: 28px; font-size: 1.0625rem; }
+    .gh .stat-line { display: flex; gap: 32px; font-family: var(--mono); font-size: var(--fs-mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2); }
+    .gh .stat-line em { font-style: normal; color: var(--accent); margin-right: 6px; }
+
+    /* album switcher */
+    .albums {
+      max-width: var(--container-wide); margin: 0 auto;
+      padding: 32px var(--pad-page) 0;
+      display: flex; gap: 0; flex-wrap: wrap;
+      border-bottom: 1px solid var(--rule);
+    }
+    .album {
+      cursor: pointer; padding: 24px 32px 20px 0; margin-right: 24px;
+      font-family: var(--serif); color: var(--ink-3);
+      border-bottom: 2px solid transparent;
+      position: relative;
+    }
+    .album .nm { font-size: 1.5rem; line-height: 1; }
+    .album .ct { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; margin-left: 12px; }
+    .album:hover { color: var(--ink-2); }
+    .album.on { color: var(--ink); }
+    .album.on::after { content: ""; position: absolute; left: 0; right: 24px; bottom: -1px; height: 2px; background: var(--accent); }
+
+    /* Masonry grid */
+    .gallery { padding: 56px var(--pad-page) 96px; }
+    .gallery-inner { max-width: var(--container-wide); margin: 0 auto; }
+    .masonry {
+      column-count: 4; column-gap: 16px;
+    }
+    .mtile {
+      break-inside: avoid; margin-bottom: 16px;
+      position: relative; overflow: hidden; cursor: pointer;
+    }
+    .mtile .ph {
+      width: 100%; height: 100%;
+      transition: transform 1200ms var(--ease-out);
+    }
+    .mtile:hover .ph { transform: scale(1.05); }
+    .mtile .pin {
+      position: absolute; left: 14px; bottom: 14px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--bone);
+      padding: 6px 10px; background: rgba(0,0,0,0.36); backdrop-filter: blur(8px);
+      opacity: 0; transition: opacity var(--t-base) var(--ease);
+    }
+    .mtile:hover .pin { opacity: 1; }
+
+    @media (max-width: 1100px) { .masonry { column-count: 2; } }
+    @media (max-width: 600px)  { .masonry { column-count: 1; } }
+
+    /* Lightbox */
+    .lb {
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(20, 16, 12, 0.96);
+      display: none; align-items: center; justify-content: center;
+      backdrop-filter: blur(20px);
+    }
+    .lb.open { display: flex; animation: lbIn 400ms var(--ease-out); }
+    @keyframes lbIn { from {opacity:0;} to {opacity:1;} }
+    .lb-inner {
+      width: 92vw; max-width: 1280px; height: 88vh;
+      display: grid; grid-template-rows: auto 1fr auto; gap: 18px;
+      color: var(--bone);
+    }
+    .lb-top {
+      display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: baseline;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(245,240,230,0.6);
+    }
+    .lb-top .ttl { color: rgba(245,240,230,0.95); font-family: var(--serif); font-size: 1.5rem; letter-spacing: -0.01em; text-transform: none; }
+    .lb-stage { position: relative; overflow: hidden; }
+    .lb-stage .ph { width: 100%; height: 100%; }
+    .lb-x {
+      cursor: pointer; background: transparent; border: 1px solid rgba(245,240,230,0.3);
+      color: rgba(245,240,230,0.85); padding: 8px 14px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .lb-x:hover { background: rgba(245,240,230,0.1); }
+    .lb-nav { display: flex; gap: 12px; }
+    .lb-nav button {
+      cursor: pointer; background: transparent; border: 1px solid rgba(245,240,230,0.3);
+      color: rgba(245,240,230,0.9); width: 44px; height: 44px;
+      font-family: var(--serif); font-size: 1.25rem;
+    }
+    .lb-nav button:hover { background: rgba(245,240,230,0.1); }
+    .lb-bot {
+      display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end;
+      color: rgba(245,240,230,0.7);
+    }
+    .lb-bot .cap { font-family: var(--serif); font-size: 1.0625rem; max-width: 60ch; color: rgba(245,240,230,0.92); }
+    .lb-bot .meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; }
+    .lb-bot .meta a { color: rgba(245,240,230,0.92); border-bottom: 1px solid currentColor; padding-bottom: 2px; }
+  </style>
+</head>
+<body>
+
+<div data-slot="nav"></div>
+
+<header class="gh" data-screen-label="04 Gallery / Header">
+  <div class="gh-inner">
+    <div class="gh-row">
+      <div>
+        <span class="label">影像 / Gallery</span>
+        <h1 class="serif" style="margin-top:18px;">412 张照片，<br/>归在 <em>4 卷</em>。</h1>
+        <p class="lede">从教室到草坪，从读书会到戈21 报名现场。班级影像编辑部按主题归档，悬停看说明，点击进入大图。</p>
+      </div>
+      <div class="stat-line">
+        <span><em>412</em> Photos</span>
+        <span><em>4</em> Albums</span>
+        <span><em>3</em> Years</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="albums" id="albums">
+  <div class="album on" data-album="gobi21"><span class="nm">戈21 动员 · Gobi 21 Kickoff</span><span class="ct">47 张</span></div>
+  <div class="album" data-album="banquet"><span class="nm">班级晚宴 · Banquets</span><span class="ct">128 张</span></div>
+  <div class="album" data-album="visit"><span class="nm">企业参访 · Visits</span><span class="ct">96 张</span></div>
+  <div class="album" data-album="reading"><span class="nm">读书会 · Reading</span><span class="ct">141 张</span></div>
+</div>
+
+<section class="gallery" data-screen-label="04 Gallery / Wall">
+  <div class="gallery-inner">
+    <div class="masonry" id="masonry"></div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lb" id="lb" role="dialog" aria-modal="true">
+  <div class="lb-inner">
+    <div class="lb-top">
+      <span><span id="lbNum">№ 01</span> / <span id="lbTotal">47</span></span>
+      <span class="ttl" id="lbTtl">—</span>
+      <button class="lb-x" id="lbClose">关闭 ESC</button>
+    </div>
+    <div class="lb-stage">
+      <div class="ph" id="lbPh" data-tone="2"></div>
+    </div>
+    <div class="lb-bot">
+      <div class="cap" id="lbCap">—</div>
+      <div class="lb-nav">
+        <button id="lbPrev" aria-label="prev">‹</button>
+        <button id="lbNext" aria-label="next">›</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div data-slot="footer"></div>
+
+<script src="shared.js" data-page="gallery"></script>
+<script>
+  // ---------- Photo dataset by album ----------
+  const ALBUMS = {
+    gobi21: {
+      name: "戈 21 · Gobi 21",
+      origin: "活动 №&nbsp;036",
+      link: "activity-gobi21.html",
+      photos: makePhotos("gobi21", 14, [2,1,3,2,1,4,2,3,1,2,4,1,3,2], [
+        "起跑前 / 沙鸣山 / 06:11", "第一日补给点 / 14:08", "夜宿营地 / 21:02",
+        "第二日逆风 / 11:34", "队伍剪影 / 17:21", "啦啦队 / 13:58",
+        "第三日老路 / 16:10", "脚底起泡的同学 / 19:44", "终点前最后 1km / 18:30",
+        "终点合影 / 18:42", "庆功夜 / 22:15", "返程列车 / 09:11",
+        "捐赠人合影 / 港大", "戈友基金交付现场"
+      ])
+    },
+    banquet: {
+      name: "班级晚宴 · Banquets",
+      origin: "活动 №&nbsp;011 / №&nbsp;002 · 含共赴春序 · 迎新晚宴 等
+      link: "activity-gobi21.html",
+      photos: makePhotos("banquet", 12, [3,4,3,1,3,4,1,2,3,1,4,3], [
+        "草坪 / 西郊 / 17:30", "弦乐四重奏 / 18:00", "签到台",
+        "晚宴长桌 / 19:11", "致辞 / 校友会会长", "夜灯 / 长桌远景",
+        "敬酒 / 同学合影", "签名墙", "焰火 / 22:08",
+        "8A-194 班合影", "返场曲 / 钢琴独奏", "散场 / 23:30"  
+      ])
+    },
+    visit: {
+      name: "企业参访 · Visits",
+      origin: "活动 №&nbsp;031 · 026",
+      link: "activity-gobi21.html",
+      photos: makePhotos("visit", 10, [1,2,4,1,3,2,4,1,2,3], [
+        "字节跳动 / 朝阳门",  "中金公司 / 北京",  "美的工业 4.0 / 顺德",
+        "招商局 / 蛇口",  "腾讯滨海 / 深圳",  "联想总部 / 北京",
+        "宁德时代 / 福建",  "比亚迪 / 西安",  "华为松山湖",
+        "宝马慕尼黑（线上）"
+      ])
+    },
+    reading: {
+      name: "读书会 · Reading",
+      origin: "活动 №&nbsp;030 · 008",
+      link: "activity-gobi21.html",
+      photos: makePhotos("reading", 9, [3,1,3,2,3,1,3,2,3], [
+        "朗润园 №&nbsp;07 / 张维迎",  "复旦经院 №&nbsp;01 / 兰小欢",
+        "港大主楼 №&nbsp;04",  "深圳前海 №&nbsp;05",
+        "苏州大学 №&nbsp;06",  "线上 №&nbsp;02 / 何帆",
+        "岭南大学 №&nbsp;03",  "黄浦江畔 №&nbsp;08",
+        "西郊 №&nbsp;09 (筹备中)"
+      ])
+    }
+  };
+
+  function makePhotos(prefix, n, tones, caps) {
+    const out = [];
+    const aspects = ["3/4", "4/5", "1/1", "4/3", "3/2", "16/10"];
+    for (let i = 0; i < n; i++) {
+      out.push({
+        num: String(i+1).padStart(2,"0"),
+        tone: tones[i % tones.length],
+        aspect: aspects[i % aspects.length],
+        caption: caps[i] || ""
+      });
+    }
+    return out;
+  }
+
+  let curAlbum = "gobi21";
+  const masonry = document.getElementById("masonry");
+
+  function render() {
+    const a = ALBUMS[curAlbum];
+    masonry.innerHTML = a.photos.map((p, i) => `
+      <div class="mtile" data-idx="${i}">
+        <div class="ph" data-tone="${p.tone}" style="aspect-ratio:${p.aspect};">
+          <span class="ph-num">№ ${p.num}</span>
+          <span class="ph-cap">${p.caption}</span>
+        </div>
+        <span class="pin">№ ${p.num} · ${a.name}</span>
+      </div>`).join("");
+
+    // Reveal stagger
+    [...masonry.children].forEach((el, i) => {
+      el.style.opacity = "0"; el.style.transform = "translateY(16px)";
+      requestAnimationFrame(() => {
+        el.style.transition = `opacity 600ms var(--ease-out) ${Math.min(i,16)*30}ms, transform 600ms var(--ease-out) ${Math.min(i,16)*30}ms`;
+        el.style.opacity = "1"; el.style.transform = "none";
+      });
+    });
+
+    [...masonry.children].forEach(el => {
+      el.addEventListener("click", () => openLb(parseInt(el.dataset.idx)));
+    });
+  }
+
+  document.querySelectorAll(".album").forEach(a => {
+    a.addEventListener("click", () => {
+      document.querySelectorAll(".album").forEach(x => x.classList.remove("on"));
+      a.classList.add("on");
+      curAlbum = a.dataset.album;
+      render();
+    });
+  });
+
+  // ---------- Lightbox ----------
+  const lb = document.getElementById("lb");
+  const lbPh = document.getElementById("lbPh");
+  const lbNum = document.getElementById("lbNum");
+  const lbTotal = document.getElementById("lbTotal");
+  const lbTtl = document.getElementById("lbTtl");
+  const lbCap = document.getElementById("lbCap");
+  let lbIdx = 0;
+
+  function openLb(i) {
+    lbIdx = i;
+    paint();
+    lb.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeLb() {
+    lb.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+  function paint() {
+    const a = ALBUMS[curAlbum];
+    const p = a.photos[lbIdx];
+    lbPh.dataset.tone = p.tone;
+    lbPh.style.aspectRatio = "16/10";
+    lbPh.innerHTML = `<span class="ph-num">№ ${p.num}</span><span class="ph-cap">${p.caption}</span>`;
+    lbNum.textContent = `№ ${p.num}`;
+    lbTotal.textContent = a.photos.length;
+    lbTtl.innerHTML = a.name;
+    lbCap.innerHTML = `${p.caption || "—"} <span style="opacity:0.6;font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;margin-left:14px;">来自 / FROM <a href="${a.link}">${a.origin}</a></span>`;
+  }
+  function next() { const a = ALBUMS[curAlbum]; lbIdx = (lbIdx + 1) % a.photos.length; paint(); }
+  function prev() { const a = ALBUMS[curAlbum]; lbIdx = (lbIdx - 1 + a.photos.length) % a.photos.length; paint(); }
+
+  document.getElementById("lbClose").addEventListener("click", closeLb);
+  document.getElementById("lbNext").addEventListener("click", next);
+  document.getElementById("lbPrev").addEventListener("click", prev);
+  lb.addEventListener("click", e => { if (e.target === lb) closeLb(); });
+  document.addEventListener("keydown", e => {
+    if (!lb.classList.contains("open")) return;
+    if (e.key === "Escape") closeLb();
+    if (e.key === "ArrowRight") next();
+    if (e.key === "ArrowLeft") prev();
+  });
+
+  render();
+
+  // album from URL
+  const params = new URLSearchParams(location.search);
+  if (params.get("album") && ALBUMS[params.get("album")]) {
+    document.querySelector(`.album[data-album="${params.get("album")}"]`).click();
+  }
+</script>
+
+</body>
+</html>

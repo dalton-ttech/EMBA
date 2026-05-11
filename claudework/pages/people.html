@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>人物 · HKU-PKU EMBA 8A-194 班级档案馆</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="globals.css" />
+  <style>
+    .ph-cover { padding: 80px var(--pad-page) 24px; max-width: var(--container-wide); margin: 0 auto; }
+    .ph-cover h1 { font-size: clamp(2.5rem, 6vw, 6rem); line-height: 0.95; letter-spacing: var(--tracking-display); }
+    .ph-cover h1 em { font-style: italic; color: var(--accent); }
+    .ph-cover .lede { color: var(--ink-2); max-width: 56ch; margin-top: 24px; font-size: 1.0625rem; }
+
+    /* Filters */
+    .pf {
+      max-width: var(--container-wide); margin: 0 auto;
+      padding: 32px var(--pad-page) 24px;
+      display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end;
+      border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    }
+    .pf .role-tabs { display: flex; gap: 0; flex-wrap: wrap; }
+    .pf .role-tabs .rt {
+      cursor: pointer; padding: 12px 24px 12px 0; margin-right: 24px;
+      font-family: var(--serif); font-size: 1.25rem; color: var(--ink-3);
+      position: relative; border-bottom: 2px solid transparent;
+      transition: color var(--t-base) var(--ease);
+    }
+    .pf .role-tabs .rt small { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; margin-left: 10px; }
+    .pf .role-tabs .rt:hover { color: var(--ink-2); }
+    .pf .role-tabs .rt.on { color: var(--ink); }
+    .pf .role-tabs .rt.on::after { content: ""; position: absolute; left: 0; right: 24px; bottom: -1px; height: 2px; background: var(--accent); }
+
+    .pf input[type="search"] {
+      width: 280px; background: transparent; color: var(--ink);
+      border: 1px solid var(--rule); padding: 10px 14px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    .pf input[type="search"]:focus { outline: none; border-color: var(--ink); }
+
+    /* Roster */
+    .roster { padding: 56px var(--pad-page) 96px; }
+    .roster-inner { max-width: var(--container-wide); margin: 0 auto; }
+    .group-head {
+      display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: end;
+      padding-bottom: 16px; border-bottom: 1px solid var(--rule); margin: 32px 0 24px;
+    }
+    .group-head h2 { font-family: var(--serif); font-size: 1.625rem; letter-spacing: -0.01em; }
+    .group-head h2 em { font-style: italic; color: var(--accent); }
+    .group-head .ct { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 24px;
+    }
+    .pcard {
+      cursor: pointer; padding: 0;
+      transition: opacity var(--t-base) var(--ease);
+    }
+    .pcard .av {
+      position: relative; width: 100%; aspect-ratio: 1/1;
+      overflow: hidden; background: var(--bone-2);
+    }
+    .pcard .av .ph { width: 100%; height: 100%; transition: transform 1200ms var(--ease-out); }
+    .pcard:hover .av .ph { transform: scale(1.06); }
+    .pcard .av .num { position: absolute; right: 10px; top: 10px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: rgba(255,255,255,0.85); padding: 4px 6px; background: rgba(0,0,0,0.34); }
+    .pcard .nm { margin-top: 14px; font-family: var(--serif); font-size: 1.25rem; line-height: 1.2; letter-spacing: -0.005em; color: var(--ink); }
+    .pcard .nm em { font-style: italic; color: var(--accent); margin-left: 6px; font-size: 0.9rem; }
+    .pcard .role { margin-top: 4px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
+    .pcard .quote { margin-top: 8px; font-family: var(--serif); font-size: 0.9375rem; color: var(--ink-2); line-height: 1.4; }
+
+    /* Person sheet */
+    .sheet {
+      position: fixed; inset: 0; z-index: 200; display: none;
+      background: rgba(20, 16, 12, 0.5);
+      backdrop-filter: blur(10px);
+      align-items: stretch; justify-content: flex-end;
+    }
+    .sheet.open { display: flex; animation: fade 300ms var(--ease-out); }
+    @keyframes fade { from {opacity:0;} to {opacity:1;} }
+    .sheet-inner {
+      width: 540px; max-width: 100vw; height: 100%;
+      background: var(--bone); padding: 48px;
+      overflow-y: auto;
+      animation: slide 400ms var(--ease-out);
+    }
+    @keyframes slide { from { transform: translateX(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+    .sheet-x { background: transparent; border: 1px solid var(--rule); padding: 8px 14px; cursor: pointer; font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-2); }
+    .sheet-x:hover { border-color: var(--ink); color: var(--ink); }
+    .sheet-top { display: flex; justify-content: space-between; align-items: start; margin-bottom: 32px; }
+    .sheet-top .num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); }
+    .sheet .av-big { width: 100%; aspect-ratio: 4/5; margin-bottom: 24px; }
+    .sheet h2 { font-family: var(--serif); font-size: 2.25rem; letter-spacing: -0.02em; line-height: 1.05; }
+    .sheet h2 em { font-style: italic; color: var(--accent); margin-left: 12px; font-size: 1.25rem; }
+    .sheet .role { margin-top: 6px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
+    .sheet .quote {
+      margin-top: 24px; padding: 18px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+      font-family: var(--serif); font-size: 1.25rem; line-height: 1.4; color: var(--ink); font-style: italic;
+    }
+    .sheet dl { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 24px; margin-top: 24px; }
+    .sheet dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+    .sheet dd { margin: 0; font-family: var(--serif); color: var(--ink); }
+    .sheet .related-row { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--rule); }
+    .sheet .related-row h3 { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); font-weight: 400; margin-bottom: 12px; }
+    .sheet .related-row a { display: block; padding: 10px 0; border-bottom: 1px solid var(--rule-soft); color: var(--ink); font-family: var(--serif); font-size: 1rem; }
+    .sheet .related-row a:hover { color: var(--accent); }
+
+    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 700px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+  </style>
+</head>
+<body>
+
+<div data-slot="nav"></div>
+
+<header class="ph-cover" data-screen-label="07 People / Header">
+  <span class="label">人物 / People</span>
+  <h1 class="serif" style="margin-top:18px;">35 位同学，<br/>12 位 <em>到访嘉宾</em>。</h1>
+  <p class="lede">这是一份正在生长的名册。同学按姓氏笔画排序；嘉宾按到访时间排序。点开任一卡片，看 ta 与 8A-194 的交集。</p>
+</header>
+
+<section class="pf" data-screen-label="07 People / Filter">
+  <div class="role-tabs" id="roles">
+    <div class="rt on" data-role="ALL">全部 <small>47</small></div>
+    <div class="rt" data-role="同学">同学 <small>35</small></div>
+    <div class="rt" data-role="嘉宾">到访嘉宾 <small>8</small></div>
+    <div class="rt" data-role="教授">教授 / 导师 <small>4</small></div>
+  </div>
+  <input type="search" placeholder="按姓名 / 行业 / 关键词检索 · SEARCH" id="search" />
+</section>
+
+<section class="roster" data-screen-label="07 People / Roster">
+  <div class="roster-inner" id="roster"></div>
+</section>
+
+<!-- Sheet -->
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <div class="sheet-inner">
+    <div class="sheet-top">
+      <span class="num" id="sNum">№ —</span>
+      <button class="sheet-x" id="sClose">关闭 ×</button>
+    </div>
+    <div class="av-big ph" id="sAv"></div>
+    <h2 class="serif"><span id="sName">—</span><em id="sEn"></em></h2>
+    <div class="role" id="sRole">—</div>
+    <div class="quote" id="sQuote">—</div>
+    <dl>
+      <div><dt>City</dt><dd id="sCity">—</dd></div>
+      <div><dt>Industry</dt><dd id="sInd">—</dd></div>
+      <div><dt>Cohort</dt><dd id="sCoh">HKU 8A · PKU 194</dd></div>
+      <div><dt>Joined</dt><dd id="sJoin">2025.09</dd></div>
+    </dl>
+    <div class="related-row">
+      <h3>出现在 / Appears in</h3>
+      <div id="sRel"></div>
+    </div>
+  </div>
+</aside>
+
+<div data-slot="footer"></div>
+
+<script src="shared.js" data-page="people"></script>
+<script>
+  // ---------- People dataset (representative subset) ----------
+  // role: 同学 / 嘉宾 / 教授
+  const PEOPLE = [
+    // editors / leadership
+    { id:"p001", num:"001", role:"同学", group:"班级团队 · Class Council", name:"王 某", en:"Wang Mou", city:"北京", industry:"金融 / VC", quote:"读戈走完，把每一卷都摆上书架。", tone:1, related:["№ 014 · 戈21 报名动员","№ 011 · 共赴春序","№ 010 · 公益捐赠"] },
+    { id:"p002", num:"002", role:"同学", group:"班级团队 · Class Council", name:"陈 某", en:"Chen Mou", city:"上海", industry:"媒体 / 出版", quote:"班级故事的第一稿，多半在我这。", tone:3, related:["№ 035 · 共赴春序","№ 030 · 读书会 №&nbsp;07"] },
+    { id:"p003", num:"003", role:"同学", group:"班级团队 · Class Council", name:"林 某", en:"Lin Mou", city:"深圳", industry:"互联网", quote:"做企业的人，要去彼此的现场。", tone:2, related:["№ 031 · 字节参访","№ 026 · 美的"] },
+    { id:"p004", num:"004", role:"同学", group:"班级团队 · Class Council", name:"张 某", en:"Zhang Mou", city:"杭州", industry:"消费品", quote:"摄影机不撒谎，背包带里也不撒谎。", tone:4, related:["№ 036 · 戈21","№ 028 · 戈 20"] },
+    { id:"p005", num:"005", role:"同学", group:"班级团队 · Class Council", name:"周 某", en:"Zhou Mou", city:"北京", industry:"投资", quote:"剪辑是一种重新走一遍的方式。", tone:3, related:["V·12 沙鸣山的四日"] },
+    { id:"p006", num:"006", role:"同学", group:"班级团队 · Class Council", name:"李 某", en:"Li Mou", city:"上海", industry:"品牌设计", quote:"档案是设计的考古题。", tone:1, related:["设计 / 视觉系统"] },
+    { id:"p007", num:"007", role:"同学", group:"班级团队 · Class Council", name:"赵 某", en:"Zhao Mou", city:"深圳", industry:"互联网 / 工程", quote:"代码也是一种归档。", tone:2, related:["技术 / 站点维护"] },
+
+    // gobi team
+    { id:"p101", num:"101", role:"同学", group:"戈21 出征 A 队 · Gobi Squad", name:"刘 某", en:"Liu Mou", city:"北京", industry:"医疗", quote:"起跑前三天，老师说今年不一定走完全程。", tone:2, related:["№ 014 · 戈21 报名"] },
+    { id:"p102", num:"102", role:"同学", group:"戈21 出征 A 队 · Gobi Squad", name:"许 某", en:"Xu Mou", city:"上海", industry:"制造", quote:"队形不是体能，是心率。", tone:1, related:["№ 014 · 戈21 报名"] },
+    { id:"p103", num:"103", role:"同学", group:"戈21 出征 A 队 · Gobi Squad", name:"郑 某", en:"Zheng Mou", city:"深圳", industry:"半导体", quote:"集训这个夏天要象考 MBA 一样拼。", tone:4, related:["№ 014 · 戈21 报名"] },
+    { id:"p104", num:"104", role:"同学", group:"戈21 出征 A 队 · Gobi Squad", name:"孙 某", en:"Sun Mou", city:"广州", industry:"地产", quote:"莫贺延碛的风沙，提前报到。", tone:3, related:["№ 014 · 戈21 报名"] },
+    { id:"p105", num:"105", role:"同学", group:"戈21 出征 A 队 · Gobi Squad", name:"朱 某", en:"Zhu Mou", city:"成都", industry:"消费", quote:"把跑出来的步频留给下一届。", tone:2, related:["№ 014 · 戈21 报名"] },
+
+    // visiting guests
+    { id:"g01", num:"G·01", role:"嘉宾", group:"到访嘉宾 · Visiting Guests", name:"张 维 教授", en:"Prof. Zhang Wei", city:"香港 · 港大", industry:"经济 · 政治学", quote:"商业不是博弈，是合作的高级形式。", tone:1, related:["№ 005 · 嘉宾对话"] },
+    { id:"g02", num:"G·02", role:"教授", group:"到访嘉宾 · Visiting Guests", name:"何 帆 教授", en:"Prof. He Fan", city:"上海 · 复旦", industry:"经济 / 写作", quote:"看见慢变量。", tone:3, related:["V·03 对话"] },
+    { id:"g03", num:"G·03", role:"教授", group:"到访嘉宾 · Visiting Guests", name:"兰 小欢 教授", en:"Prof. Lan Xiaohuan", city:"上海 · 复旦", industry:"公共财政", quote:"把账算清楚，再说政策。", tone:2, related:["№ 003 · 读书 №&nbsp;01"] },
+    { id:"g04", num:"G·04", role:"嘉宾", group:"到访嘉宾 · Visiting Guests", name:"梁 某 校长", en:"President Liang", city:"北京", industry:"高等教育", quote:"EMBA 不只是学历，是一份名单。", tone:4, related:["№ 001 · 开学典礼"] },
+    { id:"g05", num:"G·05", role:"嘉宾", group:"到访嘉宾 · Visiting Guests", name:"邹 某", en:"Zou Mou", city:"深圳", industry:"科技 / 创始人", quote:"硬科技，慢生长。", tone:1, related:["№ 008 · 美的参访"] },
+    { id:"g06", num:"G·06", role:"嘉宾", group:"到访嘉宾 · Visiting Guests", name:"龙 某", en:"Long Mou", city:"北京", industry:"投资 / 一级", quote:"耐心是一级市场的护城河。", tone:3, related:["№ 012 · 参访中金"] },
+
+    // 余下同学 · 合计 35 位（07 + 05 + 23 = 35）
+    ...["田","杨","黄","吴","曹","郭","马","罗","梁","韩","唐","谢","邓","萧","彭","袁","蔡","蒋","叶","钟","汪","姚","钱"].map((s, i) => ({
+      id:`c${i+201}`, num:String(i+13).padStart(3,"0"), role:"同学", group:"全班名册 · Class Roster (35)",
+      name:`${s} 某`, en:`${s} Mou`, city:["北京","上海","深圳","广州","杭州","香港"][i % 6],
+      industry:["金融","制造","互联网","医疗","消费","能源","媒体","咨询","地产","科技"][i % 10],
+      quote:["读戈一程。","各自做企业，偶尔回到一桌。","风沙之后，更愿坐下喝茶。"][i % 3],
+      tone: ((i % 4) + 1),
+      related:["№ 011 · 共赴春序"]
+    }))
+  ];
+
+  let curRole = "ALL";
+  let curQ = "";
+  const rosterEl = document.getElementById("roster");
+
+  function render() {
+    const list = PEOPLE.filter(p => {
+      if (curRole !== "ALL" && p.role !== curRole) return false;
+      if (curQ) {
+        const hay = (p.name + p.en + p.industry + p.city).toLowerCase();
+        if (!hay.includes(curQ.toLowerCase())) return false;
+      }
+      return true;
+    });
+
+    // group by p.group
+    const groups = {};
+    list.forEach(p => { (groups[p.group] = groups[p.group] || []).push(p); });
+
+    let html = "";
+    Object.entries(groups).forEach(([g, items]) => {
+      html += `
+        <div class="group-head">
+          <h2 class="serif">${g}</h2>
+          <span></span>
+          <span class="ct">${items.length} 位 · ${items.length} ENTRIES</span>
+        </div>
+        <div class="grid">
+          ${items.map(p => `
+            <div class="pcard" data-id="${p.id}">
+              <div class="av"><div class="ph" data-tone="${p.tone}"><span></span></div><span class="num">№ ${p.num}</span></div>
+              <div class="nm">${p.name}<em>${p.en}</em></div>
+              <div class="role">${p.industry} · ${p.city}</div>
+              <div class="quote">「${p.quote}」</div>
+            </div>`).join("")}
+        </div>`;
+    });
+
+    if (!list.length) html = `<div style="padding:80px 0;text-align:center;font-family:var(--serif);color:var(--ink-3);">暂无匹配记录 / No match.</div>`;
+
+    rosterEl.innerHTML = html;
+
+    [...rosterEl.querySelectorAll(".pcard")].forEach((el, i) => {
+      el.style.opacity = "0"; el.style.transform = "translateY(14px)";
+      requestAnimationFrame(() => {
+        el.style.transition = `opacity 500ms var(--ease-out) ${Math.min(i,30)*20}ms, transform 500ms var(--ease-out) ${Math.min(i,30)*20}ms`;
+        el.style.opacity = "1"; el.style.transform = "none";
+      });
+      el.addEventListener("click", () => openSheet(el.dataset.id));
+    });
+  }
+
+  document.querySelectorAll("#roles .rt").forEach(t => {
+    t.addEventListener("click", () => {
+      document.querySelectorAll("#roles .rt").forEach(x => x.classList.remove("on"));
+      t.classList.add("on");
+      curRole = t.dataset.role;
+      render();
+    });
+  });
+  document.getElementById("search").addEventListener("input", e => {
+    curQ = e.target.value.trim();
+    render();
+  });
+
+  // Sheet
+  const sheet = document.getElementById("sheet");
+  function openSheet(id) {
+    const p = PEOPLE.find(x => x.id === id);
+    if (!p) return;
+    document.getElementById("sNum").textContent = `№ ${p.num} · ${p.role}`;
+    document.getElementById("sAv").dataset.tone = p.tone;
+    document.getElementById("sAv").innerHTML = `<span class="ph-num">№ ${p.num}</span><span class="ph-cap">${p.name} / ${p.city}</span>`;
+    document.getElementById("sName").textContent = p.name;
+    document.getElementById("sEn").textContent = p.en;
+    document.getElementById("sRole").textContent = `${p.role} · ${p.industry} · ${p.city}`;
+    document.getElementById("sQuote").textContent = `「${p.quote}」`;
+    document.getElementById("sCity").textContent = p.city;
+    document.getElementById("sInd").textContent = p.industry;
+    document.getElementById("sRel").innerHTML = (p.related || []).map(r => `<a href="activity-gobi21.html">${r}</a>`).join("");
+    sheet.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeSheet() { sheet.classList.remove("open"); document.body.style.overflow = ""; }
+  document.getElementById("sClose").addEventListener("click", closeSheet);
+  sheet.addEventListener("click", e => { if (e.target === sheet) closeSheet(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && sheet.classList.contains("open")) closeSheet(); });
+
+  render();
+</script>
+</body>
+</html>

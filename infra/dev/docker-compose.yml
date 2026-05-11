@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: emba-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: emba_dev
+      POSTGRES_USER: emba
+      POSTGRES_PASSWORD: emba_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - emba-postgres-data:/var/lib/postgresql/data
+
+volumes:
+  emba-postgres-data:

@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>影像 · EMBA 8A 班级档案馆</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="globals.css" />
+  <style>
+    .vh { padding: 80px var(--pad-page) 32px; border-bottom: 1px solid var(--rule); }
+    .vh-inner { max-width: var(--container-wide); margin: 0 auto; }
+    .vh h1 { font-size: clamp(2.5rem, 6vw, 6rem); line-height: 0.95; letter-spacing: var(--tracking-display); }
+    .vh h1 em { font-style: italic; color: var(--accent); }
+    .vh .lede { color: var(--ink-2); max-width: 56ch; margin-top: 28px; font-size: 1.0625rem; }
+
+    /* Featured film */
+    .feat-film {
+      max-width: var(--container-wide); margin: 0 auto;
+      padding: 56px var(--pad-page);
+      display: grid; grid-template-columns: 2fr 1fr; gap: 48px;
+      align-items: end;
+    }
+    .feat-stage {
+      position: relative; aspect-ratio: 16/9; cursor: pointer;
+      overflow: hidden;
+    }
+    .feat-stage .ph { width: 100%; height: 100%; transition: transform 1500ms var(--ease-out); }
+    .feat-stage:hover .ph { transform: scale(1.04); }
+    .play {
+      position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+      width: 96px; height: 96px;
+      border: 1px solid rgba(255,255,255,0.7);
+      background: rgba(0,0,0,0.2); backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+      transition: transform var(--t-base) var(--ease), background var(--t-base) var(--ease);
+    }
+    .feat-stage:hover .play { transform: translate(-50%, -50%) scale(1.06); background: var(--accent); border-color: var(--accent); }
+    .feat-stage .runtime {
+      position: absolute; right: 16px; top: 16px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: rgba(255,255,255,0.92);
+      padding: 6px 10px; background: rgba(0,0,0,0.36); backdrop-filter: blur(8px);
+    }
+    .feat-meta .kicker { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); }
+    .feat-meta h2 { font-size: clamp(2rem, 3vw, 3rem); line-height: 1.05; margin: 16px 0 16px; letter-spacing: -0.02em; }
+    .feat-meta h2 em { font-style: italic; color: var(--accent); }
+    .feat-meta p { font-size: 1.0625rem; max-width: 38ch; }
+    .feat-meta .meta-row { margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--rule); display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .meta-row dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+    .meta-row dd { margin: 0; font-family: var(--serif); font-size: 1rem; color: var(--ink); }
+
+    /* Category strip */
+    .cats { max-width: var(--container-wide); margin: 0 auto; padding: 0 var(--pad-page); }
+    .cats-inner { display: flex; gap: 0; flex-wrap: wrap; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 18px 0; align-items: center; }
+    .cats-inner .lab { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); margin-right: 24px; }
+    .cats-inner .chip { padding: 6px 14px; cursor: pointer; font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); margin-right: 6px; transition: all var(--t-base) var(--ease); border: 1px solid transparent; }
+    .cats-inner .chip:hover { color: var(--ink); }
+    .cats-inner .chip.on { color: var(--bone); background: var(--ink); }
+
+    /* Grid of films */
+    .films { padding: 56px var(--pad-page) 96px; }
+    .films-inner { max-width: var(--container-wide); margin: 0 auto; }
+    .film-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px 24px;
+    }
+    .film {
+      cursor: pointer;
+      transition: transform var(--t-base) var(--ease);
+    }
+    .film .stage {
+      position: relative; aspect-ratio: 16/10;
+      overflow: hidden;
+      transition: transform var(--t-base) var(--ease);
+    }
+    .film .stage .ph { width: 100%; height: 100%; transition: transform 1200ms var(--ease-out); }
+    .film:hover .stage .ph { transform: scale(1.06); }
+    .film .stage::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(0deg, rgba(0,0,0,0.36), transparent 40%);
+      pointer-events: none;
+    }
+    .film .runtime { position: absolute; right: 12px; top: 12px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: rgba(255,255,255,0.92);
+      padding: 4px 8px; background: rgba(0,0,0,0.36); backdrop-filter: blur(8px); z-index: 2; }
+    .film .play-mini {
+      position: absolute; left: 14px; bottom: 14px;
+      width: 48px; height: 48px;
+      border: 1px solid rgba(255,255,255,0.7);
+      background: rgba(0,0,0,0.2); backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-family: var(--mono); font-size: 14px;
+      transition: transform var(--t-base) var(--ease), background var(--t-base) var(--ease);
+      z-index: 2;
+    }
+    .film:hover .play-mini { background: var(--accent); border-color: var(--accent); transform: scale(1.06); }
+    .film .meta { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; padding: 14px 0; border-top: 1px solid var(--rule); margin-top: 14px; }
+    .film .meta .num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: var(--ink-3); text-transform: uppercase; }
+    .film .meta .ttl { font-family: var(--serif); font-size: 1.125rem; line-height: 1.25; }
+    .film .meta .ttl em { color: var(--accent); font-style: italic; }
+    .film .meta .cat { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); padding: 2px 8px; border: 1px solid var(--rule); }
+
+    /* Player modal */
+    .player {
+      position: fixed; inset: 0; z-index: 200; display: none;
+      background: rgba(15, 12, 10, 0.96);
+      align-items: center; justify-content: center;
+      backdrop-filter: blur(20px);
+    }
+    .player.open { display: flex; animation: fade 400ms var(--ease-out); }
+    @keyframes fade { from {opacity:0;} to {opacity:1;} }
+    .player-inner {
+      width: 90vw; max-width: 1200px; color: var(--bone);
+    }
+    .player-stage {
+      position: relative; aspect-ratio: 16/9; background: black;
+      display: flex; align-items: center; justify-content: center; overflow: hidden;
+    }
+    .player-stage .ph { width: 100%; height: 100%; }
+    .player-stage::before {
+      content: "■  PLAYER  ■  RUNTIME 12 : 04";
+      position: absolute; left: 16px; top: 14px; z-index: 4;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+      color: rgba(255,255,255,0.7);
+    }
+    .player-bar {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      padding: 24px;
+      display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center;
+      background: linear-gradient(0deg, rgba(0,0,0,0.6), transparent);
+    }
+    .player-bar .pp { width: 44px; height: 44px; border: 1px solid rgba(255,255,255,0.6); background: transparent; color: white; font-family: var(--serif); font-size: 1.1rem; cursor: pointer; }
+    .player-bar .scrub { height: 2px; background: rgba(255,255,255,0.3); position: relative; }
+    .player-bar .scrub::after { content: ""; position: absolute; left: 0; top: 0; height: 100%; width: 32%; background: var(--accent); animation: scrubGrow 60s linear infinite; }
+    @keyframes scrubGrow { from {width: 0%;} to {width: 100%;} }
+    .player-bar .ts { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; color: rgba(255,255,255,0.8); }
+    .player-top {
+      display: flex; justify-content: space-between; align-items: end;
+      padding-bottom: 18px; margin-bottom: 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.18);
+    }
+    .player-top .ttl { font-family: var(--serif); font-size: 1.75rem; letter-spacing: -0.01em; }
+    .player-top .ttl em { font-style: italic; color: var(--accent); }
+    .player-top .px {
+      cursor: pointer; background: transparent; border: 1px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.85); padding: 8px 14px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .player-bottom {
+      margin-top: 18px;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 24px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(255,255,255,0.6);
+    }
+    .player-bottom .desc { color: rgba(255,255,255,0.92); font-family: var(--serif); font-size: 1rem; letter-spacing: 0; text-transform: none; max-width: 56ch; }
+    .player-bottom dt { color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+    .player-bottom dd { margin: 0; color: rgba(255,255,255,0.92); font-family: var(--serif); }
+
+    @media (max-width: 1100px) {
+      .feat-film { grid-template-columns: 1fr; gap: 32px; }
+      .film-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div data-slot="nav"></div>
+
+<header class="vh" data-screen-label="05 Videos / Header">
+  <div class="vh-inner">
+    <span class="label">影像 / Films</span>
+    <h1 class="serif" style="margin-top:18px;">28 段影像，<br/>关于 <em>这一程</em>。</h1>
+    <p class="lede">由班级影像编辑部出品。从戈壁纪录片到嘉宾对话，每一段都附拍摄记录与剪辑卡。</p>
+  </div>
+</header>
+
+<!-- Featured film -->
+<section class="feat-film" data-screen-label="05 Videos / Featured">
+  <div class="feat-stage" data-id="gobi-doc">
+    <div class="ph" data-tone="2">
+      <span class="ph-num">FEATURE FILM</span>
+      <span class="ph-cap">戈21 纪录片 / 2025.05 / 12:04</span>
+    </div>
+    <span class="runtime">12 : 04</span>
+    <span class="play">▶ 播放</span>
+  </div>
+  <div class="feat-meta">
+    <span class="kicker">本期长片 · Featured</span>
+    <h2 class="serif">沙鸣山的<em>四日</em>。</h2>
+    <p>第一支由 8A 同学自己掌镜、自己剪辑、自己配乐的戈壁纪录片。从沙鸣山逆风的清晨到莫贺延碛的终点合影，12 分钟。</p>
+    <dl class="meta-row">
+      <div><dt>Runtime</dt><dd>12 : 04</dd></div>
+      <div><dt>Director</dt><dd>影像编辑部</dd></div>
+      <div><dt>Date</dt><dd>2025.05.04</dd></div>
+      <div><dt>Format</dt><dd>4K · 24fps</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- Category strip -->
+<div class="cats">
+  <div class="cats-inner">
+    <span class="lab">分类 / Category</span>
+    <span class="chip on" data-cat="ALL">全部 · All — 28</span>
+    <span class="chip" data-cat="纪录">纪录片 — 5</span>
+    <span class="chip" data-cat="对话">嘉宾对话 — 11</span>
+    <span class="chip" data-cat="花絮">活动花絮 — 8</span>
+    <span class="chip" data-cat="片段">分享片段 — 4</span>
+  </div>
+</div>
+
+<!-- Films grid -->
+<section class="films" data-screen-label="05 Videos / Grid">
+  <div class="films-inner">
+    <div class="film-grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- Player modal -->
+<div class="player" id="player">
+  <div class="player-inner">
+    <div class="player-top">
+      <div class="ttl serif" id="pTtl">沙鸣山的<em>四日</em></div>
+      <button class="px" id="pClose">关闭 ESC</button>
+    </div>
+    <div class="player-stage">
+      <div class="ph" data-tone="2" id="pPh"><span class="ph-num">PLAYER</span><span class="ph-cap">沙鸣山的四日 / 12:04</span></div>
+      <div class="player-bar">
+        <button class="pp" id="pPP">▶</button>
+        <div class="scrub"></div>
+        <span class="ts" id="pTs">03:54 / 12:04</span>
+      </div>
+    </div>
+    <dl class="player-bottom">
+      <div class="desc" id="pDesc">由 8A 同学自己掌镜、自己剪辑、自己配乐的戈壁纪录片。从沙鸣山逆风的清晨到莫贺延碛的终点合影，12 分钟。</div>
+      <div><dt>Runtime</dt><dd id="pRun">12 : 04</dd></div>
+      <div><dt>Date</dt><dd id="pDate">2025.05.04</dd></div>
+      <div><dt>Source</dt><dd id="pSrc">活动 №&nbsp;028</dd></div>
+    </dl>
+  </div>
+</div>
+
+<div data-slot="footer"></div>
+
+<script src="shared.js" data-page="videos"></script>
+<script>
+  const FILMS = [
+    { id:"gobi-doc", num:"V·12", cat:"纪录", title:"沙鸣山的<em>四日</em>", run:"12:04", date:"2025.05", tone:2, src:"活动 №&nbsp;028 · 戈21" },
+    { id:"chunxu",    num:"V·11", cat:"花絮", title:"<em>共赴春序</em> · 草坪音乐会", run:"04:18", date:"2026.04", tone:3, src:"活动 №&nbsp;035" },
+    { id:"talk-zhang",num:"V·10", cat:"对话", title:"对话 №&nbsp;11 / <em>张维教授</em>", run:"38:21", date:"2025.09", tone:1, src:"活动 №&nbsp;029" },
+    { id:"reading07", num:"V·09", cat:"片段", title:"读书会 №&nbsp;07 / 节选", run:"08:55", date:"2025.10", tone:3, src:"活动 №&nbsp;030" },
+    { id:"bytedance", num:"V·08", cat:"花絮", title:"走进 <em>字节</em> 总部", run:"06:31", date:"2025.11", tone:1, src:"活动 №&nbsp;031" },
+    { id:"gobi-train",num:"V·07", cat:"纪录", title:"<em>戈壁集训</em> №&nbsp;04 银川", run:"09:42", date:"2025.04", tone:2, src:"活动 №&nbsp;027" },
+    { id:"midea",     num:"V·06", cat:"花絮", title:"美的工业 4.0 / 顺德", run:"05:08", date:"2025.03", tone:4, src:"活动 №&nbsp;026" },
+    { id:"talk-he",   num:"V·05", cat:"对话", title:"对话 №&nbsp;10 / <em>何帆教授</em>", run:"34:12", date:"2025.06", tone:3, src:"线上嘉宾" },
+    { id:"newyear25", num:"V·04", cat:"花絮", title:"跨年夜话 / 2025", run:"03:24", date:"2025.01", tone:4, src:"活动 №&nbsp;025" },
+    { id:"orient",    num:"V·03", cat:"纪录", title:"<em>启程之夜</em> / 8A 开学典礼", run:"07:55", date:"2024.09", tone:2, src:"活动 №&nbsp;006" },
+    { id:"reading01", num:"V·02", cat:"片段", title:"读书会 №&nbsp;01 / <em>《置身事内》</em>", run:"11:08", date:"2024.11", tone:1, src:"活动 №&nbsp;008" },
+    { id:"welcome",   num:"V·01", cat:"花絮", title:"迎新晚宴 / 8A 启程", run:"04:46", date:"2024.10", tone:3, src:"活动 №&nbsp;007" },
+  ];
+
+  const grid = document.getElementById("grid");
+  let curCat = "ALL";
+
+  function render() {
+    const list = FILMS.filter(f => curCat === "ALL" || f.cat === curCat);
+    grid.innerHTML = list.map(f => `
+      <div class="film" data-id="${f.id}">
+        <div class="stage">
+          <div class="ph" data-tone="${f.tone}"><span class="ph-num">${f.num}</span><span class="ph-cap">${stripTags(f.title)} / ${f.run}</span></div>
+          <span class="runtime">${f.run}</span>
+          <span class="play-mini">▶</span>
+        </div>
+        <div class="meta">
+          <span class="num">${f.num}</span>
+          <span class="ttl">${f.title}</span>
+          <span class="cat">${f.cat}</span>
+        </div>
+      </div>`).join("");
+    [...grid.children].forEach((el, i) => {
+      el.style.opacity = "0"; el.style.transform = "translateY(20px)";
+      requestAnimationFrame(() => {
+        el.style.transition = `opacity 700ms var(--ease-out) ${Math.min(i,12)*45}ms, transform 700ms var(--ease-out) ${Math.min(i,12)*45}ms`;
+        el.style.opacity = "1"; el.style.transform = "none";
+      });
+    });
+    [...grid.children].forEach(el => {
+      el.addEventListener("click", () => openP(el.dataset.id));
+    });
+  }
+  function stripTags(s) { return s.replace(/<[^>]+>/g, ""); }
+
+  document.querySelectorAll(".chip").forEach(c => {
+    c.addEventListener("click", () => {
+      document.querySelectorAll(".chip").forEach(x => x.classList.remove("on"));
+      c.classList.add("on");
+      curCat = c.dataset.cat;
+      render();
+    });
+  });
+
+  // Player
+  const player = document.getElementById("player");
+  function openP(id) {
+    const f = FILMS.find(x => x.id === id);
+    if (!f) return;
+    document.getElementById("pTtl").innerHTML = f.title;
+    document.getElementById("pPh").dataset.tone = f.tone;
+    document.getElementById("pPh").innerHTML = `<span class="ph-num">${f.num}</span><span class="ph-cap">${stripTags(f.title)} / ${f.run}</span>`;
+    document.getElementById("pRun").textContent = f.run;
+    document.getElementById("pDate").textContent = f.date;
+    document.getElementById("pSrc").innerHTML = f.src;
+    document.getElementById("pTs").textContent = `00:00 / ${f.run}`;
+    player.classList.add("open");
+    document.body.style.overflow = "hidden";
+  }
+  function closeP() { player.classList.remove("open"); document.body.style.overflow = ""; }
+  document.getElementById("pClose").addEventListener("click", closeP);
+  player.addEventListener("click", e => { if (e.target === player) closeP(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && player.classList.contains("open")) closeP(); });
+
+  // Featured
+  document.querySelector(".feat-stage").addEventListener("click", () => openP("gobi-doc"));
+
+  render();
+</script>
+</body>
+</html>

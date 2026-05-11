@@ -1,0 +1,11 @@
+export type ContentStatus = 'draft' | 'review' | 'published' | 'archived'
+export type MediaVisibility = 'private' | 'public'
+export type VideoProvider =
+  | 'wechatChannels'
+  | 'tencentVideo'
+  | 'bilibili'
+  | 'youku'
+  | 'douyin'
+  | 'youtube'
+  | 'vimeo'
+  | 'other'

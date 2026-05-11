@@ -1,0 +1,43 @@
+{
+  "name": "emba-archive",
+  "version": "0.9.0",
+  "private": true,
+  "packageManager": "pnpm@10.15.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=20.9 <21"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @emba/web dev",
+    "build": "pnpm --filter @emba/web build",
+    "start": "pnpm --filter @emba/web start",
+    "lint": "pnpm --filter @emba/web lint",
+    "typecheck": "pnpm --filter @emba/web typecheck",
+    "format": "prettier --check .",
+    "format:write": "prettier --write .",
+    "review:node0": "pnpm lint && pnpm typecheck && pnpm build",
+    "review:node1": "pnpm lint && pnpm typecheck && pnpm build && pnpm audit --prod",
+    "review:node2": "pnpm lint && pnpm typecheck && pnpm build && pnpm audit --prod",
+    "review:node3": "pnpm lint && pnpm typecheck && pnpm build && pnpm audit --prod",
+    "review:node4": "pnpm lint && pnpm typecheck && pnpm build && pnpm audit --prod",
+    "review:node5": "pnpm lint && pnpm typecheck && pnpm build && pnpm audit --prod && pnpm --filter @emba/web payload:types",
+    "review:node6": "pnpm lint && pnpm typecheck && pnpm build && pnpm audit --prod",
+    "review:node7": "pnpm lint && pnpm typecheck && pnpm build && pnpm audit --prod",
+    "review:node8": "pnpm lint && pnpm typecheck && pnpm build && pnpm audit --prod"
+  },
+  "pnpm": {
+    "overrides": {
+      "dompurify": "3.4.0",
+      "esbuild": "0.25.0",
+      "postcss": "8.5.10",
+      "uuid": "14.0.0"
+    }
+  },
+  "devDependencies": {
+    "pnpm": "10.15.1",
+    "prettier": "3.3.3"
+  }
+}

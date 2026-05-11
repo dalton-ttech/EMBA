@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>HKU PKU EMBA · 8A 班级档案馆</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="globals.css" />
+  <style>
+    /* ==========================================================
+       HOME — page-specific styles
+       ========================================================== */
+
+    /* ----- HERO ----- */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      padding: 0 var(--pad-page);
+      overflow: hidden;
+    }
+    .hero-grid {
+      position: relative;
+      max-width: var(--container-wide);
+      margin: 0 auto;
+      height: calc(100vh - 72px);
+      min-height: 720px;
+    }
+
+    /* Editorial mast — top */
+    .hero-mast {
+      position: absolute; left: 0; right: 0; top: 24px;
+      display: grid; grid-template-columns: 1fr auto 1fr;
+      align-items: center; gap: 24px;
+      font-family: var(--mono); font-size: var(--fs-mono);
+      letter-spacing: var(--tracking-mono); text-transform: uppercase;
+      color: var(--ink-3);
+      z-index: 10;
+    }
+    .hero-mast .l { text-align: left; }
+    .hero-mast .c { text-align: center; color: var(--ink-2); }
+    .hero-mast .r { text-align: right; }
+    .hero-mast em { font-style: normal; color: var(--accent); margin-right: 8px; }
+
+    /* Collage of placeholder photos drifting in viewport */
+    .collage {
+      position: absolute; inset: 80px 0 80px 0;
+      pointer-events: none;
+    }
+    .col-card {
+      position: absolute;
+      will-change: transform;
+      transition: transform 1200ms var(--ease-out), opacity 1200ms var(--ease-out);
+    }
+    .col-card .ph { width: 100%; height: 100%; }
+
+    /* Sizes & positions — irregular, editorial */
+    .c1 { width: 22%; aspect-ratio: 4/5;   left: 2%;   top: 4%;  }
+    .c2 { width: 26%; aspect-ratio: 16/11; left: 28%;  top: 14%; }
+    .c3 { width: 18%; aspect-ratio: 3/4;   left: 58%;  top: 2%;  }
+    .c4 { width: 15%; aspect-ratio: 1/1;   left: 80%;  top: 22%; }
+    .c5 { width: 19%; aspect-ratio: 5/4;   left: 4%;   top: 58%; }
+    .c6 { width: 21%; aspect-ratio: 16/10; left: 30%;  top: 64%; }
+    .c7 { width: 16%; aspect-ratio: 4/5;   left: 56%;  top: 56%; }
+    .c8 { width: 17%; aspect-ratio: 1/1;   left: 76%;  top: 60%; }
+
+    /* Float animation — subtle drift */
+    @keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-6px,-10px)} }
+    @keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(8px,-6px)} }
+    @keyframes drift3 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-4px,8px)} }
+    @keyframes drift4 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(10px,4px)} }
+    .c1 { animation: drift1 11s ease-in-out infinite; }
+    .c2 { animation: drift2 13s ease-in-out infinite; }
+    .c3 { animation: drift3 9s  ease-in-out infinite; }
+    .c4 { animation: drift4 14s ease-in-out infinite; }
+    .c5 { animation: drift2 12s ease-in-out infinite; }
+    .c6 { animation: drift3 16s ease-in-out infinite; }
+    .c7 { animation: drift1 10s ease-in-out infinite; }
+    .c8 { animation: drift4 13s ease-in-out infinite; }
+
+    /* Centerpiece title overlay */
+    .hero-center {
+      position: absolute; left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center; z-index: 5;
+      width: min(900px, 80vw);
+    }
+    .hero-eyebrow {
+      font-family: var(--mono); font-size: var(--fs-mono);
+      letter-spacing: var(--tracking-mono); text-transform: uppercase;
+      color: var(--ink-2); margin-bottom: 28px;
+      display: inline-flex; gap: 12px; align-items: center;
+    }
+    .hero-eyebrow span.dot { width: 6px; height: 6px; background: var(--accent); display: inline-block; border-radius: 50%; }
+
+    .hero-title {
+      font-family: var(--serif);
+      font-size: clamp(3rem, 7.5vw, 7.5rem);
+      line-height: 0.94;
+      letter-spacing: var(--tracking-display);
+      color: var(--ink);
+      font-weight: 400;
+    }
+    .hero-title em {
+      font-style: italic;
+      font-family: var(--serif);
+      color: var(--accent);
+    }
+    .hero-sub {
+      margin-top: 28px;
+      font-family: var(--serif);
+      font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+      color: var(--ink-2);
+      line-height: 1.5;
+      max-width: 60ch; margin-left: auto; margin-right: auto;
+    }
+
+    /* Bottom marquee strip */
+    .hero-strip {
+      position: absolute; left: 0; right: 0; bottom: 0;
+      border-top: 1px solid var(--rule);
+      display: grid; grid-template-columns: auto 1fr auto;
+      align-items: center; gap: 32px;
+      padding: 16px 0;
+      font-family: var(--mono); font-size: var(--fs-mono);
+      letter-spacing: var(--tracking-mono); text-transform: uppercase;
+      color: var(--ink-2);
+      background: var(--bone);
+    }
+    .hero-strip .ticker {
+      overflow: hidden; white-space: nowrap; position: relative;
+    }
+    .hero-strip .ticker-track {
+      display: inline-flex; gap: 56px; animation: ticker 60s linear infinite;
+    }
+    .hero-strip .ticker-track span em { font-style: normal; color: var(--accent); margin-right: 6px; }
+    @keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+    /* ==========================================================
+       Editorial intro section
+       ========================================================== */
+    .intro {
+      padding: 160px var(--pad-page) 80px;
+    }
+    .intro-inner {
+      max-width: var(--container);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .intro-eyebrow { color: var(--ink-3); }
+    .intro h2 {
+      font-size: clamp(2rem, 3.6vw, 3.4rem);
+      line-height: 1.06;
+      letter-spacing: var(--tracking-tight);
+      max-width: 22ch;
+    }
+    .intro h2 em { font-style: italic; color: var(--accent); }
+    .intro p { font-size: 1.1rem; max-width: 58ch; }
+    .intro .stat-row {
+      margin-top: 56px;
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      border-top: 1px solid var(--rule);
+    }
+    .stat {
+      padding: 24px 0;
+      border-right: 1px solid var(--rule);
+    }
+    .stat:last-child { border-right: 0; }
+    .stat .num {
+      font-family: var(--serif); font-size: 2.5rem;
+      letter-spacing: -0.02em; color: var(--ink); line-height: 1;
+    }
+    .stat .num em { font-style: italic; color: var(--accent); }
+    .stat .lab {
+      margin-top: 10px;
+      font-family: var(--mono); font-size: var(--fs-mono);
+      letter-spacing: var(--tracking-mono); text-transform: uppercase;
+      color: var(--ink-3);
+    }
+
+    /* ==========================================================
+       Featured activity (full-bleed)
+       ========================================================== */
+    .feature {
+      padding: 80px 0;
+      background: var(--bone-2);
+      transition: background var(--t-slow) var(--ease);
+    }
+    .feature-inner {
+      max-width: var(--container-wide);
+      margin: 0 auto;
+      padding: 0 var(--pad-page);
+    }
+    .feature-head {
+      display: grid; grid-template-columns: 1fr auto;
+      align-items: end; margin-bottom: 32px;
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 20px;
+    }
+    .feature-head .ttl {
+      font-family: var(--serif); font-size: 1.75rem;
+      letter-spacing: -0.01em;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+    }
+    .feature-hero {
+      position: relative;
+      aspect-ratio: 4/3;
+    }
+    .feature-hero .ph { width: 100%; height: 100%; }
+    .feature-hero .label-overlay {
+      position: absolute; left: 24px; top: 24px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: var(--tracking-mono);
+      color: var(--bone); text-transform: uppercase;
+      padding: 6px 10px; background: rgba(0,0,0,0.3); backdrop-filter: blur(8px);
+    }
+    .feature-meta {
+      padding: 12px 0;
+      display: flex; flex-direction: column; justify-content: space-between;
+    }
+    .feature-meta .kicker {
+      font-family: var(--mono); font-size: var(--fs-mono);
+      letter-spacing: var(--tracking-mono); text-transform: uppercase;
+      color: var(--accent);
+    }
+    .feature-meta h3 {
+      font-size: clamp(2rem, 2.6vw, 2.6rem); line-height: 1.06; margin: 16px 0 16px;
+    }
+    .feature-meta h3 em { font-style: italic; color: var(--accent); }
+    .feature-meta p { font-size: 1.0625rem; max-width: 38ch; }
+    .feature-meta .meta-row {
+      margin-top: 28px; display: grid; grid-template-columns: repeat(3,1fr); gap: 16px;
+      border-top: 1px solid var(--rule); padding-top: 18px;
+    }
+    .meta-row dt {
+      font-family: var(--mono); font-size: 10px; letter-spacing: var(--tracking-mono);
+      text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px;
+    }
+    .meta-row dd { margin: 0; font-size: 0.9375rem; color: var(--ink); font-family: var(--serif); }
+
+    /* ==========================================================
+       Recent index — table-like
+       ========================================================== */
+    .index-section { padding: 120px var(--pad-page) 80px; }
+    .index-inner { max-width: var(--container); margin: 0 auto; }
+    .index-head {
+      display: grid; grid-template-columns: 1fr auto;
+      align-items: end; padding-bottom: 24px;
+      border-bottom: 1px solid var(--ink);
+    }
+    .index-head h2 { font-size: clamp(1.75rem, 2.4vw, 2.4rem); }
+    .index-head .ctrls { display: flex; gap: 8px; }
+    .index-head .ctrls a {
+      font-family: var(--mono); font-size: var(--fs-mono); letter-spacing: var(--tracking-mono);
+      text-transform: uppercase; color: var(--ink-2); padding: 8px 12px;
+      border: 1px solid var(--rule);
+    }
+    .index-head .ctrls a.on { color: var(--bone); background: var(--ink); border-color: var(--ink); }
+
+    .index-row {
+      display: grid;
+      grid-template-columns: 80px 110px 1fr 180px 160px 40px;
+      gap: 24px; align-items: center;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--rule-soft);
+      transition: background var(--t-fast) var(--ease), padding var(--t-base) var(--ease);
+      cursor: pointer;
+      position: relative;
+    }
+    .index-row:hover { background: var(--bone-2); padding-left: 12px; padding-right: 12px; }
+    .index-row .num { font-family: var(--mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.1em; }
+    .index-row .date { font-family: var(--mono); font-size: 11px; color: var(--ink-2); letter-spacing: 0.1em; }
+    .index-row .title { font-family: var(--serif); font-size: 1.5rem; line-height: 1.2; letter-spacing: -0.01em; }
+    .index-row .title em { color: var(--accent); font-style: italic; }
+    .index-row .topic { font-family: var(--mono); font-size: 11px; color: var(--ink-2); letter-spacing: var(--tracking-mono); text-transform: uppercase; }
+    .index-row .topic span { display: inline-block; padding: 4px 8px; border: 1px solid var(--rule); }
+    .index-row .place { font-family: var(--serif); color: var(--ink-2); font-size: 0.95rem; }
+    .index-row .arr { text-align: right; font-family: var(--mono); color: var(--ink-3); transition: transform var(--t-base) var(--ease), color var(--t-base) var(--ease); }
+    .index-row:hover .arr { transform: translateX(6px); color: var(--accent); }
+
+    /* Hover preview floating thumb */
+    .index-row .preview {
+      position: absolute; right: 80px; top: 50%; transform: translateY(-50%) scale(0.94);
+      width: 220px; aspect-ratio: 4/3;
+      opacity: 0; pointer-events: none;
+      transition: opacity var(--t-base) var(--ease), transform var(--t-base) var(--ease);
+      z-index: 4;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.18);
+    }
+    .index-row:hover .preview { opacity: 1; transform: translateY(-50%) scale(1); }
+
+    /* ==========================================================
+       Manifesto / quote
+       ========================================================== */
+    .manifesto {
+      padding: 160px var(--pad-page);
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      background: var(--bone);
+    }
+    .manifesto-inner {
+      max-width: 1100px; margin: 0 auto;
+      display: grid; grid-template-columns: auto 1fr; gap: 64px; align-items: start;
+    }
+    .manifesto .quote-mark {
+      font-family: var(--serif); font-size: 8rem; line-height: 0.7;
+      color: var(--accent); font-style: italic;
+    }
+    .manifesto blockquote {
+      font-family: var(--serif); font-size: clamp(1.75rem, 2.6vw, 2.4rem);
+      line-height: 1.25; letter-spacing: -0.01em; color: var(--ink);
+      margin: 0; font-weight: 300;
+    }
+    .manifesto blockquote em { font-style: italic; color: var(--accent); }
+    .manifesto cite {
+      display: block; margin-top: 32px;
+      font-family: var(--mono); font-size: var(--fs-mono); letter-spacing: var(--tracking-mono);
+      text-transform: uppercase; color: var(--ink-3); font-style: normal;
+    }
+
+    /* ==========================================================
+       Three-up: gallery / videos / people teaser
+       ========================================================== */
+    .threeup {
+      padding: 120px var(--pad-page);
+    }
+    .threeup-inner {
+      max-width: var(--container-wide); margin: 0 auto;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+    }
+    .tile {
+      display: flex; flex-direction: column; gap: 16px;
+      padding: 20px; border: 1px solid var(--rule);
+      transition: border-color var(--t-base) var(--ease), background var(--t-base) var(--ease);
+      cursor: pointer;
+    }
+    .tile:hover { border-color: var(--ink); background: var(--bone-2); }
+    .tile .ph { width: 100%; aspect-ratio: 4/3; }
+    .tile .meta { display: flex; justify-content: space-between; align-items: baseline; }
+    .tile h3 { font-family: var(--serif); font-size: 1.5rem; letter-spacing: -0.01em; }
+    .tile p { font-size: 0.9375rem; color: var(--ink-2); margin: 0; }
+    .tile .arrow-link { margin-top: 8px; }
+
+    /* responsive */
+    @media (max-width: 1100px) {
+      .feature-grid { grid-template-columns: 1fr; }
+      .intro-inner { grid-template-columns: 1fr; gap: 40px; }
+      .threeup-inner { grid-template-columns: 1fr; }
+      .index-row { grid-template-columns: 60px 1fr 40px; }
+      .index-row .date, .index-row .topic, .index-row .place, .index-row .preview { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div data-slot="nav"></div>
+
+<!-- =========================================================
+     HERO
+     ========================================================= -->
+<section class="hero" data-screen-label="01 Home / Hero">
+  <div class="hero-grid">
+    <div class="hero-mast">
+      <div class="l"><em>SUM 2026.05</em>本周更新 · 戈21 影像</div>
+      <div class="c">HKU PKU EMBA 8A · 班 级 档 案 馆</div>
+      <div class="r">№&nbsp;001 — 02 / 36 卷</div>
+    </div>
+
+    <div class="collage">
+      <div class="col-card c1"><div class="ph" data-tone="3"><span class="ph-num">№ 001</span><span class="ph-cap">毕业典礼 / 港大 / 2026.04</span></div></div>
+      <div class="col-card c2"><div class="ph" data-tone="2"><span class="ph-num">№ 002</span><span class="ph-cap">戈21 终点合影 / 敦煌 / 2025.05</span></div></div>
+      <div class="col-card c3"><div class="ph" data-tone="1"><span class="ph-num">№ 003</span><span class="ph-cap">读书会 / 北京 / 2025.10</span></div></div>
+      <div class="col-card c4"><div class="ph" data-tone="4"><span class="ph-num">№ 004</span><span class="ph-cap">春日草坪音乐会 / 上海 / 2026.04</span></div></div>
+      <div class="col-card c5"><div class="ph" data-tone="2"><span class="ph-num">№ 005</span><span class="ph-cap">企业参访 · 字节 / 北京 / 2025.11</span></div></div>
+      <div class="col-card c6"><div class="ph" data-tone="1"><span class="ph-num">№ 006</span><span class="ph-cap">戈壁集训 / 银川 / 2025.04</span></div></div>
+      <div class="col-card c7"><div class="ph" data-tone="3"><span class="ph-num">№ 007</span><span class="ph-cap">嘉宾对话 · 张教授 / 港大 / 2025.09</span></div></div>
+      <div class="col-card c8"><div class="ph" data-tone="4"><span class="ph-num">№ 008</span><span class="ph-cap">迎新晚宴 / 深圳 / 2024.10</span></div></div>
+    </div>
+
+    <div class="hero-center">
+      <div class="hero-eyebrow"><span class="dot"></span>HKU&nbsp;·&nbsp;PKU&nbsp;EMBA · CLASS 8A · 194</div>
+      <h1 class="hero-title">在风沙里，<br/>在春序中，<br/>我们 <em>共此</em> 一程。</h1>
+      <p class="hero-sub">这是 HKU-PKU EMBA 8A 班级的数字档案馆。把零散的活动、照片、文章与人物，整理成可被检索、可被传阅、可长期沉淀的一卷。</p>
+    </div>
+
+    <div class="hero-strip">
+      <span><em style="color:var(--accent);font-style:normal;">●</em>&nbsp;LIVE&nbsp;·&nbsp;最新归档</span>
+      <div class="ticker">
+        <div class="ticker-track">
+          <span><em>2026.05</em>跨越风沙的 121 公里 / 8A 出征 2026 戈友会，载誉而归</span>
+          <span><em>2026.04</em>共赴春序 / 194 班春日草坪音乐会晚宴现场</span>
+          <span><em>2026.03</em>HKU EMBA / 8A 为港大戈21 加油 累计捐赠 ¥1,330,000</span>
+          <span><em>2025.10</em>读书会 №&nbsp;07 / 张维迎《市场与政府》</span>
+          <span><em>2025.09</em>企业参访 · 中金公司 / 北京</span>
+          <!-- repeat for seamless loop -->
+          <span><em>2026.05</em>跨越风沙的 121 公里 / 8A 出征 2026 戈友会，载誉而归</span>
+          <span><em>2026.04</em>共赴春序 / 194 班春日草坪音乐会晚宴现场</span>
+          <span><em>2026.03</em>HKU EMBA / 8A 为港大戈21 加油 累计捐赠 ¥1,330,000</span>
+          <span><em>2025.10</em>读书会 №&nbsp;07 / 张维迎《市场与政府》</span>
+          <span><em>2025.09</em>企业参访 · 中金公司 / 北京</span>
+        </div>
+      </div>
+      <span>↓ 滚动 / SCROLL</span>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     INTRO — editorial overview
+     ========================================================= -->
+<section class="intro" data-screen-label="01 Home / Intro">
+  <div class="intro-inner">
+    <div class="reveal">
+      <span class="label">关于本馆 / The Archive</span>
+    </div>
+    <div class="reveal">
+      <h2 class="serif">一群读书、走戈壁、做企业的人，<em>把走过的路</em>留下来。</h2>
+      <p style="margin-top:32px;">
+        HKU-PKU EMBA 8A 班，194 位同学，自 2024 年入学至今，跨过两届戈壁挑战赛、九场企业参访、十二期读书会、若干春序与寒夜。
+        这座档案馆把那些原本散落在朋友圈、群聊和公众号里的瞬间，按年份、主题、地点和人物归档，留作日后回看，亦作对外的一扇窗。
+      </p>
+      <div class="stat-row">
+        <div class="stat"><div class="num"><em>194</em></div><div class="lab">同学 / Members</div></div>
+        <div class="stat"><div class="num">36</div><div class="lab">归档活动 / Activities</div></div>
+        <div class="stat"><div class="num">¥1.33M</div><div class="lab">公益捐赠 / Donations</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     FEATURE — the headline activity
+     ========================================================= -->
+<section class="feature reveal" data-screen-label="01 Home / Feature">
+  <div class="feature-inner">
+    <div class="feature-head">
+      <div>
+        <span class="label">头条归档 / Featured</span>
+        <div class="ttl serif" style="margin-top:10px;">本期专题 · 戈 21</div>
+      </div>
+      <a class="arrow-link" href="activities.html">查看全部归档 <span class="arr">→</span></a>
+    </div>
+
+    <div class="feature-grid">
+      <a class="feature-hero" href="activity-gobi21.html">
+        <div class="ph" data-tone="2">
+          <span class="ph-num">№ 002 / GOBI-21</span>
+          <span class="ph-cap">敦煌 — 121km — 4 日 3 夜 — 2025.05.01</span>
+        </div>
+        <div class="label-overlay">2025.05 · 戈壁挑战赛 / GOBI</div>
+      </a>
+      <div class="feature-meta">
+        <div>
+          <div class="kicker">2026.03 — 公益专题 №&nbsp;14</div>
+          <h3 class="serif">HKU EMBA / 8A 班为港大 <em>戈 21</em> 加油，累计捐赠 ¥1,330,000</h3>
+          <p>从筹备到出征，再到载誉而归——8A 班连续两届投入港大戈友会公益事业。本期归档收录全部 47 张影像、12 段对内分享视频、以及一份按城市梳理的捐赠人名册。</p>
+        </div>
+        <dl class="meta-row">
+          <div><dt>主题</dt><dd>戈壁 / 公益</dd></div>
+          <div><dt>地点</dt><dd>敦煌 · 香港</dd></div>
+          <div><dt>影像</dt><dd>47 / 12</dd></div>
+        </dl>
+        <a class="arrow-link" href="activity-gobi21.html" style="margin-top:24px;">阅读专题 / Read the dossier <span class="arr">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     INDEX — recent activities (table-like)
+     ========================================================= -->
+<section class="index-section" data-screen-label="01 Home / Recent Index">
+  <div class="index-inner">
+    <div class="index-head">
+      <div>
+        <span class="label">近期归档 / Recent</span>
+        <h2 class="serif" style="margin-top:14px;">最近 8 条</h2>
+      </div>
+      <div class="ctrls">
+        <a class="on" href="#">全部</a>
+        <a href="activities.html?y=2026">2026</a>
+        <a href="activities.html?y=2025">2025</a>
+        <a href="activities.html?y=2024">2024</a>
+        <a href="activities.html">归档全表 →</a>
+      </div>
+    </div>
+
+    <a href="activity-gobi21.html" class="index-row">
+      <div class="num">№ 036</div>
+      <div class="date">2026 · 05 · 03</div>
+      <div class="title serif">跨越风沙的 121 公里 / <em>8A 班出征 2026 戈友会</em>，载誉而归</div>
+      <div class="topic"><span>戈壁</span></div>
+      <div class="place">敦煌 · 莫贺延碛</div>
+      <div class="arr">→</div>
+      <div class="preview ph" data-tone="2"><span class="ph-cap">戈21 终点</span></div>
+    </a>
+
+    <a href="#" class="index-row">
+      <div class="num">№ 035</div>
+      <div class="date">2026 · 04 · 18</div>
+      <div class="title serif">共赴春序 / 194 班春日草坪 <em>音乐会晚宴</em> 现场</div>
+      <div class="topic"><span>晚宴</span></div>
+      <div class="place">上海 · 西郊宾馆</div>
+      <div class="arr">→</div>
+      <div class="preview ph" data-tone="3"><span class="ph-cap">春序晚宴</span></div>
+    </a>
+
+    <a href="#" class="index-row">
+      <div class="num">№ 034</div>
+      <div class="date">2026 · 03 · 22</div>
+      <div class="title serif">HKU EMBA / 8A 班为港大戈21 加油，累计捐赠 <em>¥1,330,000</em></div>
+      <div class="topic"><span>公益</span></div>
+      <div class="place">香港 · 港大百周年校园</div>
+      <div class="arr">→</div>
+      <div class="preview ph" data-tone="4"><span class="ph-cap">捐赠仪式</span></div>
+    </a>
+
+    <a href="#" class="index-row">
+      <div class="num">№ 033</div>
+      <div class="date">2025 · 11 · 06</div>
+      <div class="title serif">企业参访 №&nbsp;09 / 走进 <em>字节跳动</em> 总部</div>
+      <div class="topic"><span>企业参访</span></div>
+      <div class="place">北京 · 朝阳</div>
+      <div class="arr">→</div>
+      <div class="preview ph" data-tone="1"><span class="ph-cap">字节参访</span></div>
+    </a>
+
+    <a href="#" class="index-row">
+      <div class="num">№ 032</div>
+      <div class="date">2025 · 10 · 14</div>
+      <div class="title serif">读书会 №&nbsp;07 / 张维迎《<em>市场与政府</em>》</div>
+      <div class="topic"><span>读书会</span></div>
+      <div class="place">北京 · 朗润园</div>
+      <div class="arr">→</div>
+      <div class="preview ph" data-tone="3"><span class="ph-cap">朗润读书</span></div>
+    </a>
+
+    <a href="#" class="index-row">
+      <div class="num">№ 031</div>
+      <div class="date">2025 · 09 · 02</div>
+      <div class="title serif">嘉宾对话 №&nbsp;11 / <em>张维教授</em> 与 8A 同学</div>
+      <div class="topic"><span>嘉宾</span></div>
+      <div class="place">香港 · 港大主楼</div>
+      <div class="arr">→</div>
+      <div class="preview ph" data-tone="2"><span class="ph-cap">嘉宾对话</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- =========================================================
+     MANIFESTO
+     ========================================================= -->
+<section class="manifesto reveal" data-screen-label="01 Home / Manifesto">
+  <div class="manifesto-inner">
+    <div class="quote-mark">"</div>
+    <div>
+      <blockquote>
+        我们一起读书，一起走戈壁，一起做企业。<br/>
+        而 <em>留下来</em> 的那些瞬间，<br/>
+        终将成为下一届的 <em>地图</em>。
+      </blockquote>
+      <cite>— 8A 班级编辑部 · 写于第二个春天</cite>
+    </div>
+  </div>
+</section>
+
+<!-- =========================================================
+     THREE-UP teaser
+     ========================================================= -->
+<section class="threeup" data-screen-label="01 Home / Three-up">
+  <div class="threeup-inner">
+    <a class="tile reveal" href="gallery.html">
+      <div class="ph" data-tone="3"><span class="ph-num">G / 412</span><span class="ph-cap">相册集 / 412 张</span></div>
+      <div class="meta">
+        <h3>相册</h3>
+        <span class="mono">412 张 · 4 卷</span>
+      </div>
+      <p>按主题与活动归档的影像。点开看戈壁的清晨、上海的草坪、港大的雨。</p>
+      <div class="arrow-link">进入相册 <span class="arr">→</span></div>
+    </a>
+    <a class="tile reveal" href="videos.html">
+      <div class="ph" data-tone="2"><span class="ph-num">V / 28</span><span class="ph-cap">影像 / 28 段</span></div>
+      <div class="meta">
+        <h3>影像</h3>
+        <span class="mono">28 段 · 6 主题</span>
+      </div>
+      <p>戈壁挑战赛纪录片、晚宴花絮、嘉宾对话片段。班级影像编辑部出品。</p>
+      <div class="arrow-link">观看影像 <span class="arr">→</span></div>
+    </a>
+    <a class="tile reveal" href="people.html">
+      <div class="ph" data-tone="1"><span class="ph-num">P / 194</span><span class="ph-cap">人物 / 194 位</span></div>
+      <div class="meta">
+        <h3>人物</h3>
+        <span class="mono">194 位 · 22 行业</span>
+      </div>
+      <p>同班的 194 位同学，与往返于 8A 的 36 位嘉宾、教授、特邀讲者。</p>
+      <div class="arrow-link">查阅名册 <span class="arr">→</span></div>
+    </a>
+  </div>
+</section>
+
+<div data-slot="footer"></div>
+
+<!-- Tweaks panel toggle (theme switch) -->
+<script type="text/babel" src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js"></script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script src="shared.js" data-page="home"></script>
+<script src="tweaks-panel.jsx" type="text/babel" data-presets="env,react"></script>
+<div id="tweaks-root"></div>
+<script type="text/babel" data-presets="env,react">
+  // ---- minimal Tweaks panel just for theme toggle ----
+  const TWEAK_DEFAULS = /*EDITMODE-BEGIN*/{
+    "theme": "conservative",
+    "accentHue": 42
+  }/*EDITMODE-END*/;
+
+  const { useState, useEffect } = React;
+
+  function Tweaks() {
+    const [open, setOpen] = useState(false);
+    const [vals, setVals] = useState(() => {
+      try {
+        const t = localStorage.getItem("emba8a-theme");
+        return { ...TWEAK_DEFAULS, theme: t || TWEAK_DEFAULS.theme };
+      } catch (e) { return TWEAK_DEFAULS; }
+    });
+
+    useEffect(() => {
+      const handler = (e) => {
+        const d = e.data || {};
+        if (d.type === "__activate_edit_mode") setOpen(true);
+        if (d.type === "__deactivate_edit_mode") setOpen(false);
+      };
+      window.addEventListener("message", handler);
+      window.parent.postMessage({ type: "__edit_mode_available" }, "*");
+      return () => window.removeEventListener("message", handler);
+    }, []);
+
+    useEffect(() => {
+      if (vals.theme === "bold") document.documentElement.setAttribute("data-theme", "bold");
+      else document.documentElement.removeAttribute("data-theme");
+      try { localStorage.setItem("emba8a-theme", vals.theme); } catch(e){}
+      document.documentElement.style.setProperty("--accent", `oklch(0.48 0.092 ${vals.accentHue})`);
+    }, [vals]);
+
+    function set(k, v) {
+      const next = { ...vals, [k]: v };
+      setVals(next);
+      window.parent.postMessage({ type: "__edit_mode_set_keys", edits: { [k]: v } }, "*");
+    }
+
+    if (!open) return null;
+
+    const wrapStyle = {
+      position: "fixed", right: "20px", bottom: "20px", zIndex: 100,
+      width: "320px", background: "var(--bone)", color: "var(--ink)",
+      border: "1px solid var(--ink)", padding: "20px",
+      fontFamily: "var(--sans)",
+      boxShadow: "0 30px 60px rgba(0,0,0,0.18)"
+    };
+    const labStyle = {
+      fontFamily: "var(--mono)", fontSize: "10px", letterSpacing: "0.18em",
+      textTransform: "uppercase", color: "var(--ink-3)", marginBottom: "10px"
+    };
+    return (
+      <div style={wrapStyle}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "20px" }}>
+          <div style={{ fontFamily: "var(--serif)", fontSize: "1.25rem" }}>Tweaks</div>
+          <button onClick={() => { setOpen(false); window.parent.postMessage({ type: "__edit_mode_dismissed" }, "*"); }}
+            style={{ background: "transparent", border: 0, fontFamily: "var(--mono)", fontSize: "10px", letterSpacing: "0.18em", textTransform: "uppercase", cursor: "pointer", color: "var(--ink-2)" }}>关闭 ×</button>
+        </div>
+        <div style={labStyle}>视觉版本 / Variant</div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "20px" }}>
+          {[
+            { id: "conservative", label: "Conservative", sub: "暖白书卷" },
+            { id: "bold",         label: "Bold",         sub: "夜墨编辑" }
+          ].map(o => (
+            <button key={o.id} onClick={() => set("theme", o.id)}
+              style={{
+                padding: "12px", border: "1px solid " + (vals.theme === o.id ? "var(--ink)" : "var(--rule)"),
+                background: vals.theme === o.id ? "var(--ink)" : "transparent",
+                color: vals.theme === o.id ? "var(--bone)" : "var(--ink)",
+                cursor: "pointer", textAlign: "left",
+                fontFamily: "var(--sans)", fontSize: "13px", letterSpacing: "-0.01em"
+              }}>
+              <div style={{ fontWeight: 500 }}>{o.label}</div>
+              <div style={{ fontSize: "11px", opacity: 0.7, marginTop: "4px" }}>{o.sub}</div>
+            </button>
+          ))}
+        </div>
+        <div style={labStyle}>重音色调 / Accent hue {vals.accentHue}°</div>
+        <input type="range" min="10" max="200" step="2" value={vals.accentHue}
+          onChange={(e) => set("accentHue", parseInt(e.target.value))}
+          style={{ width: "100%" }}/>
+        <div style={{ marginTop: "20px", fontSize: "11px", color: "var(--ink-3)", lineHeight: 1.5 }}>
+          切换两种主视觉版本：克制书卷感 vs 编辑深色版。
+        </div>
+      </div>
+    );
+  }
+
+  ReactDOM.createRoot(document.getElementById("tweaks-root")).render(<Tweaks />);
+</script>
+
+</body>
+</html>

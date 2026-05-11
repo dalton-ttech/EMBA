@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>联系 · HKU-PKU EMBA 8A-194 班级档案馆</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="globals.css" />
+  <style>
+    .ch { padding: 80px var(--pad-page) 56px; max-width: var(--container-wide); margin: 0 auto; }
+    .ch h1 { font-size: clamp(2.5rem, 6vw, 6rem); line-height: 0.95; letter-spacing: var(--tracking-display); }
+    .ch h1 em { font-style: italic; color: var(--accent); }
+    .ch .lede { color: var(--ink-2); max-width: 56ch; margin-top: 28px; font-size: 1.0625rem; }
+
+    /* Two-up: form + side panel */
+    .body {
+      max-width: var(--container); margin: 0 auto;
+      padding: 64px var(--pad-page) 96px;
+      display: grid; grid-template-columns: 1.4fr 1fr; gap: 80px;
+    }
+    .form { display: grid; gap: 0; }
+    .form h2 { font-family: var(--serif); font-size: 1.75rem; letter-spacing: -0.01em; padding-bottom: 16px; border-bottom: 1px solid var(--ink); margin-bottom: 8px; }
+
+    .field {
+      padding: 22px 0; border-bottom: 1px solid var(--rule-soft);
+      display: grid; grid-template-columns: 140px 1fr; gap: 24px; align-items: start;
+    }
+    .field label {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--ink-3); padding-top: 8px;
+    }
+    .field label em { font-style: normal; color: var(--accent); margin-left: 4px; }
+    .field input, .field textarea, .field select {
+      width: 100%; padding: 8px 0; background: transparent; border: 0;
+      border-bottom: 1px solid transparent;
+      font-family: var(--serif); font-size: 1.125rem; color: var(--ink);
+      letter-spacing: -0.005em;
+    }
+    .field input::placeholder, .field textarea::placeholder { color: var(--ink-3); font-style: italic; }
+    .field input:focus, .field textarea:focus, .field select:focus { outline: none; border-bottom-color: var(--accent); }
+    .field textarea { resize: vertical; min-height: 120px; line-height: 1.5; }
+    .field-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .field-row .opt {
+      cursor: pointer; padding: 8px 14px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--ink-2); border: 1px solid var(--rule);
+      transition: all var(--t-base) var(--ease);
+    }
+    .field-row .opt:hover { border-color: var(--ink); color: var(--ink); }
+    .field-row .opt.on { background: var(--ink); color: var(--bone); border-color: var(--ink); }
+
+    .submit-row { padding: 32px 0 0; display: flex; justify-content: space-between; align-items: center; }
+    .submit-row small { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+
+    /* Side panel */
+    .side h2 { font-family: var(--serif); font-size: 1.5rem; letter-spacing: -0.01em; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--rule); }
+    .side ul { list-style: none; padding: 0; margin: 0 0 32px; }
+    .side li {
+      padding: 14px 0; border-bottom: 1px solid var(--rule-soft);
+      display: grid; grid-template-columns: 90px 1fr; gap: 18px; align-items: baseline;
+    }
+    .side li dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+    .side li dd { margin: 0; font-family: var(--serif); font-size: 1.0625rem; color: var(--ink); }
+    .side li dd small { display: block; color: var(--ink-3); font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; margin-top: 4px; }
+
+    .qr {
+      margin-top: 40px;
+      display: grid; grid-template-columns: 140px 1fr; gap: 24px;
+      padding: 24px; border: 1px solid var(--rule);
+    }
+    .qr-stage {
+      width: 140px; height: 140px;
+      background:
+        repeating-linear-gradient(0deg, var(--ink) 0 4px, transparent 4px 8px),
+        repeating-linear-gradient(90deg, var(--ink) 0 4px, transparent 4px 8px),
+        var(--bone);
+      position: relative;
+      mix-blend-mode: multiply;
+    }
+    .qr-stage::after { content:""; position:absolute; inset:18px; background: var(--bone); }
+    .qr-stage::before { content:"QR"; position:absolute; left:50%; top:50%; transform: translate(-50%, -50%); z-index:2; font-family: var(--mono); font-size: 9px; letter-spacing: 0.18em; color: var(--ink); }
+    .qr-text h3 { font-family: var(--serif); font-size: 1.25rem; letter-spacing: -0.01em; margin: 0 0 8px; }
+    .qr-text small { display: block; font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+    .qr-text p { color: var(--ink-2); font-size: 0.9375rem; margin-top: 12px; max-width: 26ch; }
+
+    /* End strip */
+    .end {
+      max-width: var(--container); margin: 0 auto;
+      padding: 80px var(--pad-page);
+      border-top: 1px solid var(--rule);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end;
+    }
+    .end h2 { font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.5rem); line-height: 1.05; letter-spacing: -0.02em; max-width: 18ch; }
+    .end h2 em { font-style: italic; color: var(--accent); }
+
+    @media (max-width: 1100px) {
+      .body { grid-template-columns: 1fr; gap: 48px; }
+      .end { grid-template-columns: 1fr; gap: 32px; }
+      .field { grid-template-columns: 1fr; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<div data-slot="nav"></div>
+
+<header class="ch" data-screen-label="08 Contact / Header">
+  <span class="label">联系 / Contact</span>
+  <h1 class="serif" style="margin-top:18px;">写信给 <em>编辑部</em>，<br/>或扫一扫加入。</h1>
+  <p class="lede">同班同学、来访嘉宾、合作机构皆可。我们读每一封信，并由编辑部 7 日内回复。</p>
+</header>
+
+<section class="body" data-screen-label="08 Contact / Body">
+  <form class="form" onsubmit="return false;">
+    <h2 class="serif">写一封信 / Write a letter</h2>
+
+    <div class="field">
+      <label>身份 <em>*</em></label>
+      <div class="field-row" id="role-row">
+        <span class="opt on" data-v="同学">8A-194 同学</span>
+        <span class="opt" data-v="嘉宾">受邀嘉宾</span>
+        <span class="opt" data-v="校友">校友 / 友班</span>
+        <span class="opt" data-v="媒体">媒体 / 合作</span>
+        <span class="opt" data-v="其他">其他</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>姓名 <em>*</em></label>
+      <input type="text" placeholder="如何称呼您 / Your name" />
+    </div>
+
+    <div class="field">
+      <label>邮箱 <em>*</em></label>
+      <input type="email" placeholder="your-name@domain.com" />
+    </div>
+
+    <div class="field">
+      <label>主题</label>
+      <div class="field-row" id="topic-row">
+        <span class="opt on" data-v="投稿">投稿 / 勘误</span>
+        <span class="opt" data-v="活动">活动协作</span>
+        <span class="opt" data-v="转载">内容转载</span>
+        <span class="opt" data-v="其他">其他</span>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>正文 <em>*</em></label>
+      <textarea placeholder="请简要描述您的来意。如有附件，可附下载链接。"></textarea>
+    </div>
+
+    <div class="submit-row">
+      <button class="btn solid" type="submit">寄出 / Send <span style="margin-left:8px;">→</span></button>
+      <small>编辑部将于 7 个工作日内回复 · within 7 working days</small>
+    </div>
+    <div style="margin-top:18px;padding:14px 16px;border:1px dashed var(--rule);font-family:var(--mono);font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--ink-3);line-height:1.7;">
+      工程提示 · ENG NOTE — 本表单 onSubmit 应 POST 至 <code style="font-family:var(--mono);color:var(--ink);">/api/letters</code>（Payload Letters collection），<br/>
+      在 afterChange hook 中通过 Resend / 腾讯企业邮 SMTP 发往 <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="0e6f7c6d6667786b4e66657b7e657b366f3f373a206d6163">[email&#160;protected]</a>。
+    </div>
+  </form>
+
+  <aside class="side">
+    <h2 class="serif">编辑部 / Editor's Desk</h2>
+    <ul>
+      <li><dt>Email</dt><dd><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0d1c2d3d8d9c6d5f0d8dbc5c0dbc588d18189849ed3dfdd">[email&#160;protected]</a><small>来信进入编辑部共享邮箱</small></dd></li>
+      <li><dt>Press</dt><dd><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="09797b6c7a7a4961627c79627c316838303d276a6664">[email&#160;protected]</a><small>媒体 / 合作 / 转载</small></dd></li>
+      <li><dt>Address</dt><dd>香港 · 港大百周年校园 / 北京 · 朗润园<small>港大 8A · 北大 194 · 联合培养</small></dd></li>
+      <li><dt>Domain</dt><dd>hkupku8a194.com<small>本站域名 · This archive</small></dd></li>
+      <li><dt>WeChat</dt><dd>公众号「8A-194 班」<small>同步发布每期归档</small></dd></li>
+    </ul>
+    <div class="qr">
+      <div class="qr-stage"></div>
+      <div class="qr-text">
+        <h3 class="serif">公众号「8A-194 班」</h3>
+        <small>WeChat Official — Subscribe</small>
+        <p>关注后即可收到每期归档推送。如需联系编辑部，请在公众号后台留言，编辑部当日回复。</p>
+      </div>
+    </div>
+  </aside>
+</section>
+
+<section class="end" data-screen-label="08 Contact / End">
+  <h2 class="serif">这卷档案，<br/>因 <em>你的一封信</em>，<br/>会更厚一点。</h2>
+  <div>
+    <span class="label">END / 卷末</span>
+    <p style="margin-top:18px;color:var(--ink-2);max-width:38ch;">如果你曾在 8A-194 的某次活动中出现过——一张照片、一个发言、一段对话——欢迎来信认领或更正。</p>
+    <a class="arrow-link" href="activities.html" style="margin-top:24px;">回到归档 / Back to archive <span class="arr">→</span></a>
+  </div>
+</section>
+
+<div data-slot="footer"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="shared.js" data-page="contact"></script>
+<script>
+  ["role-row","topic-row"].forEach(id => {
+    const row = document.getElementById(id);
+    row.querySelectorAll(".opt").forEach(o => o.addEventListener("click", () => {
+      row.querySelectorAll(".opt").forEach(x => x.classList.remove("on"));
+      o.classList.add("on");
+    }));
+  });
+</script>
+</body>
+</html>

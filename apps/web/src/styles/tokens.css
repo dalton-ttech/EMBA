@@ -1,0 +1,166 @@
+/* ============================================================
+   EMBA 8A-194 Design Tokens
+   Migrated from claudework with compatibility aliases for the
+   current public Next app.
+   ============================================================ */
+
+:root {
+  /* Claudework core palette: conservative warm bone. */
+  --bone: oklch(0.972 0.006 78);
+  --bone-2: oklch(0.945 0.010 78);
+  --bone-3: oklch(0.915 0.012 76);
+  --ink: oklch(0.195 0.012 60);
+  --ink-2: oklch(0.355 0.011 60);
+  --ink-3: oklch(0.535 0.010 62);
+  --rule: oklch(0.855 0.008 70);
+  --rule-soft: oklch(0.910 0.008 72);
+  --accent: oklch(0.480 0.092 38);
+  --accent-ink: oklch(0.300 0.075 35);
+  --accent-soft: oklch(0.940 0.020 40);
+
+  /* Photo placeholder gradients. */
+  --ph-1-a: oklch(0.78 0.020 65);
+  --ph-1-b: oklch(0.55 0.020 55);
+  --ph-2-a: oklch(0.70 0.030 35);
+  --ph-2-b: oklch(0.42 0.025 30);
+  --ph-3-a: oklch(0.82 0.014 95);
+  --ph-3-b: oklch(0.58 0.014 85);
+  --ph-4-a: oklch(0.66 0.022 250);
+  --ph-4-b: oklch(0.38 0.020 250);
+
+  /* Type. */
+  --serif: "Newsreader", "Noto Serif SC", ui-serif, Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", "Noto Sans SC", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  --fs-mono: 0.6875rem;
+  --fs-small: 0.8125rem;
+  --fs-body: 1.0625rem;
+  --fs-lead: 1.25rem;
+  --fs-h3: 1.625rem;
+  --fs-h2: 2.25rem;
+  --fs-h1: 3.5rem;
+  --fs-display: 6rem;
+  --fs-mega: 8.5rem;
+
+  --tracking-mono: 0.18em;
+  --tracking-tight: -0.02em;
+  --tracking-display: -0.025em;
+
+  /* Layout. */
+  --container: 1320px;
+  --container-wide: 1560px;
+  --gutter: 32px;
+  --pad-page: clamp(20px, 4vw, 56px);
+  --rule-w: 1px;
+
+  /* Motion. */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --t-fast: 200ms;
+  --t-base: 400ms;
+  --t-slow: 800ms;
+
+  /* Compatibility aliases used by existing app CSS. */
+  --font-display: var(--serif);
+  --font-body: var(--sans);
+
+  --color-canvas: var(--bone);
+  --color-canvas-soft: var(--bone-2);
+  --color-surface: var(--bone);
+  --color-surface-raised: oklch(0.985 0.006 78);
+  --color-surface-tint: var(--accent-soft);
+  --color-surface-inverse: var(--ink);
+  --color-ink: var(--ink);
+  --color-body: var(--ink-2);
+  --color-muted: var(--ink-3);
+  --color-subtle: color-mix(in oklch, var(--ink-3), var(--bone) 28%);
+  --color-border: var(--rule);
+  --color-border-strong: color-mix(in oklch, var(--rule), var(--ink) 24%);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-ink);
+  --color-accent-muted: color-mix(in oklch, var(--accent), var(--bone) 58%);
+  --color-academic: oklch(0.38 0.052 154);
+  --color-academic-muted: oklch(0.76 0.045 150);
+  --color-link: var(--accent-ink);
+  --color-focus: oklch(0.57 0.12 72);
+  --color-success: oklch(0.47 0.08 150);
+  --color-warning: oklch(0.62 0.105 72);
+  --color-danger: oklch(0.52 0.12 28);
+
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+  --space-4xl: 96px;
+  --space-section-sm: clamp(48px, 7vw, 88px);
+  --space-section-md: clamp(72px, 10vw, 128px);
+  --space-section-lg: clamp(96px, 14vw, 176px);
+
+  --layout-narrow: 720px;
+  --layout-content: var(--container);
+  --layout-wide: var(--container-wide);
+  --layout-gutter: var(--pad-page);
+
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-round: 999px;
+
+  --shadow-soft: 0 24px 80px color-mix(in oklch, var(--ink), transparent 90%);
+  --shadow-line: 0 1px 0 var(--rule-soft);
+
+  --type-step-xs: var(--fs-mono);
+  --type-step-sm: var(--fs-small);
+  --type-step-md: var(--fs-body);
+  --type-step-lg: var(--fs-lead);
+  --type-step-xl: clamp(var(--fs-h3), 3vw, var(--fs-h2));
+  --type-step-2xl: clamp(var(--fs-h2), 6vw, var(--fs-display));
+  --type-step-3xl: clamp(var(--fs-h1), 12vw, var(--fs-mega));
+  --leading-tight: 0.98;
+  --leading-title: 1.08;
+  --leading-body: 1.55;
+  --tracking-label: var(--tracking-mono);
+
+  --media-cover: 16 / 9;
+  --media-wide: 21 / 9;
+  --media-portrait: 4 / 5;
+  --motion-duration-fast: var(--t-fast);
+  --motion-duration: var(--t-base);
+  --motion-duration-slow: var(--t-slow);
+  --motion-ease: var(--ease);
+  --motion-ease-emphasis: var(--ease-out);
+
+  --z-base: 0;
+  --z-raised: 10;
+  --z-header: 50;
+  --z-overlay: 80;
+}
+
+html[data-theme="bold"] {
+  --bone: oklch(0.135 0.010 60);
+  --bone-2: oklch(0.180 0.010 60);
+  --bone-3: oklch(0.230 0.010 60);
+  --ink: oklch(0.945 0.012 78);
+  --ink-2: oklch(0.785 0.010 70);
+  --ink-3: oklch(0.605 0.010 65);
+  --rule: oklch(0.310 0.010 60);
+  --rule-soft: oklch(0.250 0.010 60);
+  --accent: oklch(0.700 0.110 45);
+  --accent-ink: oklch(0.860 0.075 50);
+  --accent-soft: oklch(0.230 0.030 40);
+
+  --ph-1-a: oklch(0.40 0.018 70);
+  --ph-1-b: oklch(0.18 0.014 60);
+  --ph-2-a: oklch(0.45 0.030 35);
+  --ph-2-b: oklch(0.20 0.024 30);
+  --ph-3-a: oklch(0.42 0.015 95);
+  --ph-3-b: oklch(0.20 0.012 90);
+  --ph-4-a: oklch(0.40 0.020 250);
+  --ph-4-b: oklch(0.18 0.018 250);
+}

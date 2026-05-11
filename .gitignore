@@ -1,0 +1,39 @@
+# dependencies
+node_modules/
+.pnpm-store/
+.pnpm-cache/
+.pnpm-state/
+.pnpm-home/
+.npm-cache/
+.appdata/
+.localappdata/
+
+# build output
+.next/
+out/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+
+# local env
+.env
+.env.*
+!.env.example
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# system
+.DS_Store
+Thumbs.db
+
+# local runtime
+.tmp/
+uploads/
+.playwright-mcp/

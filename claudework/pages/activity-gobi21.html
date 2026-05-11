@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>跨越风沙的 121 公里 · 戈 21 · EMBA 8A 班级档案馆</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="globals.css" />
+  <style>
+    /* breadcrumb */
+    .crumb {
+      max-width: var(--container); margin: 0 auto;
+      padding: 32px var(--pad-page) 0;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--ink-3);
+      display: flex; gap: 14px; align-items: center;
+    }
+    .crumb a { color: var(--ink-3); }
+    .crumb a:hover { color: var(--ink); }
+    .crumb .sep { color: var(--rule); }
+
+    /* article hero */
+    .ar-hero {
+      max-width: var(--container); margin: 0 auto;
+      padding: 56px var(--pad-page) 48px;
+    }
+    .ar-meta {
+      display: grid; grid-template-columns: auto auto auto auto 1fr; gap: 32px;
+      align-items: baseline;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--ink-2);
+      padding-bottom: 20px; border-bottom: 1px solid var(--rule);
+    }
+    .ar-meta .key { color: var(--ink-3); margin-right: 8px; }
+    .ar-meta .accent { color: var(--accent); }
+
+    .ar-title {
+      font-family: var(--serif);
+      font-size: clamp(2.5rem, 5.6vw, 5.6rem);
+      line-height: 0.98;
+      letter-spacing: var(--tracking-display);
+      max-width: 22ch;
+      margin: 56px 0 32px;
+    }
+    .ar-title em { font-style: italic; color: var(--accent); }
+    .ar-deck {
+      font-family: var(--serif);
+      font-size: clamp(1.25rem, 1.8vw, 1.6rem);
+      color: var(--ink-2);
+      line-height: 1.45;
+      max-width: 60ch;
+      font-weight: 300;
+    }
+    .byline {
+      margin-top: 48px;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+      padding-top: 24px; border-top: 1px solid var(--rule);
+    }
+    .by-item dt {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px;
+    }
+    .by-item dd {
+      margin: 0; font-family: var(--serif); font-size: 1.0625rem; color: var(--ink);
+    }
+
+    /* full-bleed cover */
+    .cover {
+      max-width: var(--container-wide); margin: 24px auto 0;
+      padding: 0 var(--pad-page);
+    }
+    .cover .ph {
+      width: 100%; aspect-ratio: 21/9;
+      position: relative;
+    }
+    .cover .credit {
+      margin-top: 14px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--ink-3);
+      display: flex; justify-content: space-between;
+    }
+
+    /* Long-form body */
+    .body {
+      max-width: 740px; margin: 0 auto;
+      padding: 96px var(--pad-page) 96px;
+      font-size: 1.125rem; line-height: 1.7;
+      color: var(--ink-2);
+    }
+    .body p { margin: 0 0 1.4em; }
+    .body p:first-child::first-letter {
+      font-family: var(--serif);
+      font-size: 5.2rem;
+      line-height: 0.9;
+      float: left; padding: 8px 14px 0 0;
+      color: var(--ink);
+      font-weight: 400;
+    }
+    .body h2 {
+      font-family: var(--serif); font-size: 2rem; line-height: 1.15;
+      letter-spacing: -0.01em; color: var(--ink);
+      margin: 64px 0 24px;
+    }
+    .body h2 em { color: var(--accent); font-style: italic; }
+    .body blockquote {
+      margin: 56px -40px;
+      font-family: var(--serif); font-size: 1.6rem; line-height: 1.4;
+      letter-spacing: -0.01em; color: var(--ink);
+      padding-left: 24px;
+      border-left: 2px solid var(--accent);
+      font-weight: 300;
+    }
+    .body blockquote em { font-style: italic; color: var(--accent); }
+    .body figure { margin: 56px -120px; }
+    .body figure .ph { width: 100%; aspect-ratio: 16/9; }
+    .body figure figcaption {
+      margin-top: 12px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--ink-3);
+      display: flex; justify-content: space-between;
+    }
+
+    /* numbered list */
+    .body ol {
+      list-style: none; padding: 0; counter-reset: ol;
+      margin: 32px 0 32px; display: grid; gap: 24px;
+    }
+    .body ol li {
+      counter-increment: ol; padding: 18px 0 18px 56px;
+      position: relative; border-top: 1px solid var(--rule);
+      color: var(--ink);
+    }
+    .body ol li::before {
+      content: counter(ol, decimal-leading-zero);
+      position: absolute; left: 0; top: 18px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
+      color: var(--accent);
+    }
+
+    /* metric strip */
+    .metrics {
+      max-width: var(--container); margin: 0 auto;
+      padding: 80px var(--pad-page);
+      border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    }
+    .metrics-inner { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 40px; }
+    .metric .num {
+      font-family: var(--serif); font-size: 4.5rem;
+      letter-spacing: -0.025em; line-height: 0.95; color: var(--ink);
+    }
+    .metric .num em { font-style: italic; color: var(--accent); }
+    .metric .lab {
+      margin-top: 14px;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--ink-3);
+    }
+    .metric .desc { margin-top: 6px; color: var(--ink-2); font-size: 0.9375rem; }
+
+    /* photo strip */
+    .photo-strip {
+      max-width: var(--container-wide); margin: 0 auto;
+      padding: 96px var(--pad-page);
+    }
+    .photo-strip h2 {
+      font-family: var(--serif); font-size: 2.25rem; letter-spacing: -0.02em;
+      margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid var(--rule);
+      display: flex; justify-content: space-between; align-items: end;
+    }
+    .photo-strip h2 .meta {
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--ink-3);
+    }
+    .strip-grid {
+      display: grid; grid-template-columns: 2fr 1fr 1fr; grid-template-rows: 1fr 1fr;
+      gap: 12px; height: 660px;
+    }
+    .strip-grid .ph { width: 100%; height: 100%; cursor: pointer; transition: transform var(--t-base) var(--ease); }
+    .strip-grid > div { overflow: hidden; }
+    .strip-grid > div:hover .ph { transform: scale(1.04); }
+    .strip-grid .a { grid-row: 1 / 3; grid-column: 1; }
+    .strip-grid .b { grid-row: 1; grid-column: 2; }
+    .strip-grid .c { grid-row: 1; grid-column: 3; }
+    .strip-grid .d { grid-row: 2; grid-column: 2 / 4; }
+
+    /* timeline */
+    .timeline {
+      max-width: var(--container); margin: 0 auto;
+      padding: 96px var(--pad-page);
+    }
+    .timeline h2 {
+      font-family: var(--serif); font-size: 2.25rem; letter-spacing: -0.02em;
+      padding-bottom: 20px; border-bottom: 1px solid var(--rule);
+      margin-bottom: 32px;
+    }
+    .tl-list { display: grid; gap: 0; }
+    .tl-row {
+      display: grid; grid-template-columns: 110px 90px 1fr;
+      gap: 32px; align-items: baseline;
+      padding: 24px 0; border-bottom: 1px solid var(--rule-soft);
+    }
+    .tl-row .t { font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em; color: var(--accent); }
+    .tl-row .km { font-family: var(--serif); font-size: 1.5rem; color: var(--ink); }
+    .tl-row .km em { color: var(--accent); font-style: italic; }
+    .tl-row .desc { color: var(--ink-2); }
+
+    /* related */
+    .related {
+      max-width: var(--container-wide); margin: 0 auto;
+      padding: 96px var(--pad-page);
+    }
+    .related-head { display: flex; justify-content: space-between; align-items: end; padding-bottom: 20px; border-bottom: 1px solid var(--rule); margin-bottom: 32px; }
+    .related-head h2 { font-family: var(--serif); font-size: 2rem; letter-spacing: -0.02em; }
+    .rel-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    .rel-card { display: block; }
+    .rel-card .ph { width: 100%; aspect-ratio: 4/3; transition: transform 1000ms var(--ease-out); }
+    .rel-card:hover .ph { transform: scale(1.04); }
+    .rel-card .num { margin-top: 14px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+    .rel-card .ttl { font-family: var(--serif); font-size: 1.375rem; line-height: 1.25; margin-top: 6px; }
+    .rel-card .ttl em { color: var(--accent); font-style: italic; }
+
+    @media (max-width: 1100px) {
+      .body figure { margin: 40px 0; }
+      .body blockquote { margin: 32px 0; }
+      .strip-grid { grid-template-columns: 1fr 1fr; height: auto; }
+      .strip-grid .a, .strip-grid .b, .strip-grid .c, .strip-grid .d { grid-row: auto; grid-column: auto; aspect-ratio: 4/3; }
+      .metrics-inner { grid-template-columns: 1fr 1fr; gap: 24px; }
+      .rel-grid { grid-template-columns: 1fr; }
+      .byline { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div data-slot="nav"></div>
+
+<nav class="crumb">
+  <a href="index.html">首页</a><span class="sep">/</span>
+  <a href="activities.html">活动归档</a><span class="sep">/</span>
+  <a href="activities.html?y=2026">2026</a><span class="sep">/</span>
+  <a href="activities.html?t=戈壁">戈壁</a><span class="sep">/</span>
+  <span style="color:var(--ink);">№ 036</span>
+</nav>
+
+<header class="ar-hero" data-screen-label="03 Activity Detail / Hero">
+  <div class="ar-meta">
+    <span><span class="key">№</span><span class="accent">036</span></span>
+    <span><span class="key">YEAR</span>2026</span>
+    <span><span class="key">TOPIC</span>戈壁 · GOBI</span>
+    <span><span class="key">DURATION</span>4 日 3 夜</span>
+    <span style="text-align:right;">DOSSIER · 戈 21</span>
+  </div>
+
+  <h1 class="ar-title serif">跨越风沙的<br/><em>121 公里</em>，<br/>载誉而归。</h1>
+  <p class="ar-deck">8A 班连续两届出征港大戈友会公益挑战赛。
+    本卷收录从筹备、集训、出征到完赛的 47 张影像与 12 段视频，
+    并附一份按城市梳理的捐赠人名册——累计 ¥1,330,000。</p>
+
+  <dl class="byline">
+    <div class="by-item"><dt>Date · 时间</dt><dd>2025.05.01 — 2025.05.04</dd></div>
+    <div class="by-item"><dt>Location · 地点</dt><dd>甘肃 · 敦煌 · 莫贺延碛</dd></div>
+    <div class="by-item"><dt>Participants · 参与</dt><dd>8A 主队 12 人 · 啦啦队 38 人</dd></div>
+    <div class="by-item"><dt>Editors · 编辑部</dt><dd>影像组 · 文字组 · 后勤组</dd></div>
+  </dl>
+</header>
+
+<section class="cover">
+  <div class="ph" data-tone="2">
+    <span class="ph-num">COVER · 1/1</span>
+    <span class="ph-cap">戈 21 终点合影 / 莫贺延碛 / 2025.05.04 18:42</span>
+  </div>
+  <div class="credit">
+    <span>摄影 · 班级影像编辑部 / 王某 张某 李某</span>
+    <span>FRAME 1/1 · 21:9 · 18:42 BST</span>
+  </div>
+</section>
+
+<article class="body" data-screen-label="03 Activity Detail / Body">
+  <p>这是 8A 班连续第二年踏上戈壁。一年前，8A 主队第一次以"挑战 + 公益"的双重身份站上港大戈友会的赛道；一年后，同一群人带着更稳的步频回到莫贺延碛——这一次，他们不再是新兵。</p>
+
+  <p>从年初的银川集训开始，主队进行了三轮各 30 公里的耐力测试；与此同时，班级公益小组联络港大戈友基金，把"为每一公里筹一分钱"的想法落地。最终，8A 班共有 87 位同学和家属以个人名义参与捐赠，累计 ¥1,330,000，全部用于港大戈友会设立的边疆教育与女性领导力两项基金。</p>
+
+  <h2>四日三夜，<em>步频与心跳</em></h2>
+
+  <p>121 公里，沙、碛、戈。第一天 35 公里，沙鸣山的逆风把整支队伍吹得节奏全乱；第二天 32 公里，正午地表 42 ℃，主队在补给点交换了一次队形；第三天 28 公里，是已故玄奘法师当年从长安出发到伊吾必经的"莫贺延碛"老路；第四天 26 公里，进入终点，整支 12 人主队全部完赛，无一退赛。</p>
+
+  <blockquote>
+    走戈壁的意义，不在 <em>121 公里</em>，<br/>
+    而在第 <em>97 公里</em> 时，<br/>
+    那个递给你电解质的人。
+  </blockquote>
+
+  <figure>
+    <div class="ph" data-tone="1">
+      <span class="ph-num">FRAME 12/47</span>
+      <span class="ph-cap">第二天 / 沙鸣山补给点 / 2025.05.02 14:08</span>
+    </div>
+    <figcaption>
+      <span>FIG. 12 / 47 — 沙鸣山补给点</span>
+      <span>FRAME 12 / 47</span>
+    </figcaption>
+  </figure>
+
+  <h2>这一卷，归档了什么</h2>
+
+  <ol>
+    <li>主队 12 位同学的全程影像（含 4 日逐日纪要、起终点合影、终点感言）</li>
+    <li>啦啦队 38 位同学的随队照片与 12 段对内分享视频</li>
+    <li>87 位捐赠人的按城市分布名册（北京 31 / 上海 24 / 深圳 18 / 香港 9 / 其他 5）</li>
+    <li>港大戈友基金两项公益项目的去向说明文档</li>
+    <li>本届主题海报、补给站设计稿、班服打样等 9 份设计文件</li>
+  </ol>
+
+  <h2>给下一届的<em>地图</em></h2>
+
+  <p>这卷档案最终的去向，不是停在这一页。我们把它打包寄给下一届——9A、9B、以及之后所有想走这条路的同学。每一张照片背后，都附一句对话：训练、补给、夜宿、伤病、心绪。可以被翻阅，也可以被反驳。</p>
+
+  <p>这是 8A 班对戈壁挑战赛的第二份答卷，也是这卷档案被建起来的原因之一。</p>
+</article>
+
+<section class="metrics" data-screen-label="03 Activity Detail / Metrics">
+  <div class="metrics-inner">
+    <div class="metric">
+      <div class="num">121<em>km</em></div>
+      <div class="lab">Total distance</div>
+      <div class="desc">4 日 · 主队 12 人完成全程</div>
+    </div>
+    <div class="metric">
+      <div class="num">¥<em>1.33</em>M</div>
+      <div class="lab">Donations raised</div>
+      <div class="desc">87 位捐赠人 · 5 个城市</div>
+    </div>
+    <div class="metric">
+      <div class="num">47<em>/</em>12</div>
+      <div class="lab">Photos / Videos</div>
+      <div class="desc">由班级影像编辑部归档</div>
+    </div>
+    <div class="metric">
+      <div class="num"><em>2</em>/<em>2</em></div>
+      <div class="lab">Years on the route</div>
+      <div class="desc">连续两届参加港大戈友会</div>
+    </div>
+  </div>
+</section>
+
+<section class="photo-strip" data-screen-label="03 Activity Detail / Photos">
+  <h2 class="serif">影像 4 / 47 <span class="meta">→ <a class="linkline" href="gallery.html?album=gobi21">查看本卷全部 47 张</a></span></h2>
+  <div class="strip-grid">
+    <div class="a"><div class="ph" data-tone="2"><span class="ph-num">№ 12</span><span class="ph-cap">沙鸣山日出 / 2025.05.02 06:11</span></div></div>
+    <div class="b"><div class="ph" data-tone="1"><span class="ph-num">№ 21</span><span class="ph-cap">补给站 / 14:08</span></div></div>
+    <div class="c"><div class="ph" data-tone="3"><span class="ph-num">№ 33</span><span class="ph-cap">夜宿营地 / 21:02</span></div></div>
+    <div class="d"><div class="ph" data-tone="4"><span class="ph-num">№ 47</span><span class="ph-cap">终点合影 / 莫贺延碛 / 18:42</span></div></div>
+  </div>
+</section>
+
+<section class="timeline" data-screen-label="03 Activity Detail / Timeline">
+  <h2 class="serif">四日时刻表 / Schedule</h2>
+  <div class="tl-list">
+    <div class="tl-row"><span class="t">Day 01 · 05.01</span><span class="km serif"><em>35</em> km</span><span class="desc">沙鸣山起点 → 第一晚营地。下午逆风，晚 21:00 抵营地。</span></div>
+    <div class="tl-row"><span class="t">Day 02 · 05.02</span><span class="km serif"><em>32</em> km</span><span class="desc">沙鸣山补给点正午 42 ℃，主队交换队形，补给两次。</span></div>
+    <div class="tl-row"><span class="t">Day 03 · 05.03</span><span class="km serif"><em>28</em> km</span><span class="desc">莫贺延碛老路。下午一名队员脚底起泡，啦啦队接力扶持。</span></div>
+    <div class="tl-row"><span class="t">Day 04 · 05.04</span><span class="km serif"><em>26</em> km</span><span class="desc">终点。18:42 全部 12 人完成。班级旗在终点拍下合影。</span></div>
+  </div>
+</section>
+
+<section class="related" data-screen-label="03 Activity Detail / Related">
+  <div class="related-head">
+    <h2 class="serif">相关归档 / Related</h2>
+    <a class="arrow-link" href="activities.html">查看全部 36 卷 <span class="arr">→</span></a>
+  </div>
+  <div class="rel-grid">
+    <a href="#" class="rel-card">
+      <div class="ph" data-tone="2"><span class="ph-num">№ 028</span><span class="ph-cap">戈 20 / 121km / 2025.05</span></div>
+      <div class="num">№ 028 · 2025·05·02 · 戈壁</div>
+      <div class="ttl serif"><em>戈 20</em> / 4 日 3 夜 121km 完赛</div>
+    </a>
+    <a href="#" class="rel-card">
+      <div class="ph" data-tone="1"><span class="ph-num">№ 027</span><span class="ph-cap">戈壁集训 / 银川 / 2025.04</span></div>
+      <div class="num">№ 027 · 2025·04·08 · 戈壁</div>
+      <div class="ttl serif">戈壁集训 №&nbsp;04 / <em>银川</em> 黄河边的 30 公里</div>
+    </a>
+    <a href="#" class="rel-card">
+      <div class="ph" data-tone="4"><span class="ph-num">№ 034</span><span class="ph-cap">捐赠仪式 / 港大 / 2026.03</span></div>
+      <div class="num">№ 034 · 2026·03·22 · 公益</div>
+      <div class="ttl serif">为港大戈21 加油 累计捐赠 <em>¥1.33M</em></div>
+    </a>
+  </div>
+</section>
+
+<div data-slot="footer"></div>
+<script src="shared.js" data-page="activities"></script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>班级 · HKU-PKU EMBA 8A-194 班级档案馆</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="globals.css" />
+  <style>
+    /* Cover */
+    .ab-cover {
+      padding: 80px var(--pad-page) 56px;
+      max-width: var(--container-wide); margin: 0 auto;
+    }
+    .ab-cover .label { color: var(--ink-3); }
+    .ab-cover h1 {
+      font-family: var(--serif);
+      font-size: clamp(3rem, 8vw, 8rem);
+      line-height: 0.92;
+      letter-spacing: var(--tracking-display);
+      margin: 28px 0 32px;
+      max-width: 18ch;
+    }
+    .ab-cover h1 em { font-style: italic; color: var(--accent); }
+    .ab-cover .deck {
+      font-family: var(--serif); font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+      color: var(--ink-2); max-width: 60ch; line-height: 1.5;
+    }
+
+    .ab-meta {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 24px; margin-top: 64px;
+      padding-top: 32px; border-top: 1px solid var(--rule);
+    }
+    .ab-meta dt { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+    .ab-meta dd { margin: 0; font-family: var(--serif); font-size: 1.0625rem; color: var(--ink); }
+
+    /* Two-up: portrait + body */
+    .ab-body {
+      max-width: var(--container); margin: 0 auto;
+      padding: 96px var(--pad-page);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+    }
+    .ab-portrait .ph { width: 100%; aspect-ratio: 4/5; }
+    .ab-portrait .credit { margin-top: 14px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+    .ab-text h2 { font-family: var(--serif); font-size: 2.25rem; line-height: 1.1; letter-spacing: -0.01em; margin-bottom: 20px; }
+    .ab-text h2 em { font-style: italic; color: var(--accent); }
+    .ab-text p { font-size: 1.0625rem; line-height: 1.7; color: var(--ink-2); margin-bottom: 1em; }
+    .ab-text h3 { font-family: var(--serif); font-size: 1.5rem; margin: 32px 0 14px; letter-spacing: -0.01em; }
+
+    /* Two-school strip */
+    .schools {
+      max-width: var(--container); margin: 0 auto;
+      padding: 64px var(--pad-page);
+      display: grid; grid-template-columns: 1fr 80px 1fr; gap: 0; align-items: stretch;
+      border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    }
+    .school { padding: 32px 0; }
+    .school .nm { font-family: var(--serif); font-size: 2rem; letter-spacing: -0.01em; }
+    .school .en { font-family: var(--mono); font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-3); margin-top: 8px; }
+    .school .role { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-top: 18px; }
+    .school p { color: var(--ink-2); margin-top: 14px; max-width: 36ch; line-height: 1.65; }
+    .school .badge { display: inline-block; margin-top: 14px; padding: 6px 12px; border: 1px solid var(--ink); font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; }
+    .school.right { text-align: right; }
+    .school.right p { margin-left: auto; }
+    .school-x { display: grid; place-items: center; font-family: var(--serif); font-size: 2.25rem; color: var(--ink-3); font-style: italic; }
+
+    /* Mission strip */
+    .mission {
+      background: var(--bone-2);
+      padding: 120px var(--pad-page);
+      transition: background var(--t-slow) var(--ease);
+    }
+    .mission-inner { max-width: var(--container); margin: 0 auto; }
+    .mission .label { color: var(--ink-3); }
+    .mission h2 {
+      font-family: var(--serif); font-size: clamp(2rem, 4vw, 3.5rem);
+      line-height: 1.05; letter-spacing: -0.02em; max-width: 22ch;
+      margin: 24px 0 56px;
+    }
+    .mission h2 em { font-style: italic; color: var(--accent); }
+    .pillars {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 32px; padding-top: 32px;
+      border-top: 1px solid var(--rule);
+    }
+    .pillar .num {
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--accent);
+    }
+    .pillar h3 { font-family: var(--serif); font-size: 1.625rem; margin: 16px 0 14px; letter-spacing: -0.01em; }
+    .pillar p { color: var(--ink-2); font-size: 1rem; line-height: 1.6; max-width: 38ch; }
+
+    /* Calendar — yearly map */
+    .cal { padding: 120px var(--pad-page); }
+    .cal-inner { max-width: var(--container-wide); margin: 0 auto; }
+    .cal-head { display: flex; justify-content: space-between; align-items: end; padding-bottom: 20px; border-bottom: 1px solid var(--ink); margin-bottom: 32px; }
+    .cal-head h2 { font-family: var(--serif); font-size: clamp(2rem, 3vw, 3rem); letter-spacing: -0.02em; }
+    .cal-head h2 em { font-style: italic; color: var(--accent); }
+
+    .cal-row {
+      display: grid; grid-template-columns: 100px 1fr;
+      gap: 32px; align-items: start;
+      padding: 32px 0; border-bottom: 1px solid var(--rule-soft);
+    }
+    .cal-row .y { font-family: var(--serif); font-size: 3rem; line-height: 1; color: var(--ink); letter-spacing: -0.02em; }
+    .cal-row .y em { font-style: italic; color: var(--accent); }
+    .cal-track {
+      display: grid; grid-template-columns: repeat(12, 1fr);
+      gap: 4px;
+      padding: 12px 0;
+    }
+    .cal-mo {
+      height: 56px; position: relative;
+      background: var(--bone-2); border: 1px solid transparent;
+      transition: background var(--t-base) var(--ease), border-color var(--t-base) var(--ease);
+    }
+    .cal-mo .mo { position: absolute; left: 6px; top: 6px; font-family: var(--mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); }
+    .cal-mo .ev { position: absolute; left: 6px; bottom: 6px; right: 6px; font-family: var(--serif); font-size: 0.75rem; line-height: 1.15; color: var(--ink); }
+    .cal-mo[data-tone="strong"] { background: var(--ink); }
+    .cal-mo[data-tone="strong"] .mo { color: rgba(255,255,255,0.5); }
+    .cal-mo[data-tone="strong"] .ev { color: var(--bone); }
+    .cal-mo[data-tone="accent"] { background: var(--accent); }
+    .cal-mo[data-tone="accent"] .mo { color: rgba(255,255,255,0.6); }
+    .cal-mo[data-tone="accent"] .ev { color: var(--bone); }
+    .cal-mo[data-tone="future"] { background: transparent; border: 1px dashed var(--rule); }
+    .cal-mo[data-tone="future"] .ev { color: var(--ink-3); font-style: italic; }
+    .cal-mo:hover { border-color: var(--ink); }
+
+    /* Editors */
+    .editors {
+      max-width: var(--container); margin: 0 auto;
+      padding: 96px var(--pad-page);
+    }
+    .editors-inner { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+    .editors h2 { font-family: var(--serif); font-size: 2rem; letter-spacing: -0.01em; margin-bottom: 28px; }
+    .ed-list { list-style: none; padding: 0; margin: 0; }
+    .ed-list li {
+      display: grid; grid-template-columns: 90px 1fr; gap: 24px; align-items: baseline;
+      padding: 18px 0; border-top: 1px solid var(--rule-soft);
+    }
+    .ed-list li:first-child { border-top: 1px solid var(--rule); }
+    .ed-list .role { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); }
+    .ed-list .who { font-family: var(--serif); font-size: 1.125rem; color: var(--ink); }
+    .ed-list .who small { color: var(--ink-3); margin-left: 12px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; }
+
+    @media (max-width: 1100px) {
+      .ab-body { grid-template-columns: 1fr; gap: 32px; }
+      .ab-meta { grid-template-columns: 1fr 1fr; }
+      .schools { grid-template-columns: 1fr; }
+      .school-x { padding: 16px 0; }
+      .school.right { text-align: left; }
+      .school.right p { margin-left: 0; }
+      .pillars { grid-template-columns: 1fr; }
+      .cal-track { grid-template-columns: repeat(4, 1fr); }
+      .editors-inner { grid-template-columns: 1fr; gap: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<div data-slot="nav"></div>
+
+<header class="ab-cover" data-screen-label="06 About / Cover">
+  <span class="label">班级 / About</span>
+  <h1>HKU&nbsp;PKU EMBA<br/><em>8A-194</em> 班 · 35 人</h1>
+  <p class="deck">2025 年秋入学，2027 年毕业。35 位同学由港大 (HKU) 与北大 (PKU) 联合培养——「8A」是港大编制，「194」是北大编制，并非班级人数。这卷档案，记录两校之间、两座城市之间的所有同行时刻。</p>
+  <dl class="ab-meta">
+    <div><dt>Cohort · 届次</dt><dd>HKU 8A · PKU 194</dd></div>
+    <div><dt>Members · 同学</dt><dd>35 位</dd></div>
+    <div><dt>Cities · 城市分布</dt><dd>北京 · 上海 · 深圳 · 香港 · 杭州</dd></div>
+    <div><dt>Years · 在读</dt><dd>2025 — 2027</dd></div>
+  </dl>
+</header>
+
+<section class="schools" data-screen-label="06 About / Two Schools">
+  <div class="school">
+    <div class="nm serif">香港大学 <em>HKU</em></div>
+    <div class="en">The University of Hong Kong</div>
+    <span class="badge">港大编制 · 8A</span>
+    <div class="role">上半学期 · H1</div>
+    <p>香港 · 港大百周年校园 / 薄扶林。「8A」即港大第八届 EMBA A 班，是港方授予的班级编号。</p>
+  </div>
+  <div class="school-x">×</div>
+  <div class="school right">
+    <div class="nm serif"><em>PKU</em> 北京大学</div>
+    <div class="en">Peking University</div>
+    <span class="badge">北大编制 · 194</span>
+    <div class="role">下半学期 · H2</div>
+    <p>北京 · 朗润园。「194」是北大对应学期注册的班级序号，与人数无关，是北方学籍体系下的编号。</p>
+  </div>
+</section>
+
+<section class="ab-body" data-screen-label="06 About / Body">
+  <div class="ab-portrait">
+    <div class="ph" data-tone="3">
+      <span class="ph-num">CLASS PORTRAIT</span>
+      <span class="ph-cap">8A-194 班合影 / 港大百周年校园 / 2025.09</span>
+    </div>
+    <div class="credit">CLASS OF 2027 · GROUP PORTRAIT · HKU CENTENNIAL CAMPUS · SEP 2025</div>
+  </div>
+  <div class="ab-text">
+    <h2 class="serif">35 个 <em>读书</em>、<em>走戈壁</em>、<em>做企业</em> 的人。</h2>
+    <p>8A-194 班由港大与北大联合培养。同学们在两座城市间往返：上半学期在北京朗润园，下半学期回到香港薄扶林。这种"双校籍"安排，让 35 位同学从入学第一天就习惯把"远行"作为一门必修课——也是这卷档案以两校并置为开篇的原因。</p>
+    <p>关于 8A-194 的故事，最常被提起的有三件：即将出征的港大戈壁挑战赛 (戈21)、把读书会做成月度仪式、以及在公益上从筹款到落地的那条完整链路。三件事，构成了班级的精神底色，也构成了这座档案馆的三个立轴。</p>
+    <h3 class="serif">关于这座馆</h3>
+    <p>2026 年初，几位同学开始把朋友圈、群聊、公众号「8A-194 班」里散落的活动记录拢在一起。最初是 PDF，后来是 Notion，再后来——是这座小型的数字档案馆。它面向班级内部的同学，也欢迎外部的访客。域名 <span class="mono">hkupku8a194.com</span>。</p>
+  </div>
+</section>
+
+<section class="mission" data-screen-label="06 About / Pillars">
+  <div class="mission-inner">
+    <span class="label">三件事 / Three Pillars</span>
+    <h2>我们 <em>每年</em> 都做的事，<br/>不过 <em>三件</em>。</h2>
+    <div class="pillars">
+      <div class="pillar">
+        <span class="num">PILLAR · 01</span>
+        <h3>读 / Reading</h3>
+        <p>每月一期读书会。从《置身事内》到《市场与政府》，请教授到现场拆题，请同学带案例反驳。读书不为读书，为彼此的判断标准。</p>
+      </div>
+      <div class="pillar">
+        <span class="num">PILLAR · 02</span>
+        <h3>走 / Walking</h3>
+        <p>每年一次戈壁。班级首征——「戈 21」于 2026 年 9 月在敦煌起跑，目前班内大部分同学已报名；A 队负责完赛，B 队负责啦啦与公益。121 公里之外，是 8A-194 与下一届彼此交接的"路书"。</p>
+      </div>
+      <div class="pillar">
+        <span class="num">PILLAR · 03</span>
+        <h3>做 / Building</h3>
+        <p>每季度一次企业参访。字节、美的、招商局、中金……由同学带队、同学解读、同学复盘。做企业的人，到彼此的现场去看。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cal" data-screen-label="06 About / Calendar">
+  <div class="cal-inner">
+    <div class="cal-head">
+      <h2 class="serif">两年 · <em>每月一卷</em> 的节奏</h2>
+      <span class="label" style="color:var(--ink-3);">YEARLY MAP · 2025 → 2027</span>
+    </div>
+
+    <!-- 2027 -->
+    <div class="cal-row">
+      <div class="y serif"><em>20</em>27</div>
+      <div class="cal-track">
+        <div class="cal-mo" data-tone="future"><span class="mo">JAN</span><span class="ev">寒假归档</span></div>
+        <div class="cal-mo" data-tone="future"><span class="mo">FEB</span></div>
+        <div class="cal-mo" data-tone="future"><span class="mo">MAR</span><span class="ev">毕业筹备</span></div>
+        <div class="cal-mo" data-tone="future"><span class="mo">APR</span></div>
+        <div class="cal-mo" data-tone="future"><span class="mo">MAY</span></div>
+        <div class="cal-mo" data-tone="future"><span class="mo">JUN</span><span class="ev">毕业季</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">JUL</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">AUG</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">SEP</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">OCT</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">NOV</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">DEC</span></div>
+      </div>
+    </div>
+    <!-- 2026 -->
+    <div class="cal-row">
+      <div class="y serif"><em>20</em>26</div>
+      <div class="cal-track">
+        <div class="cal-mo" data-tone="strong"><span class="mo">JAN</span><span class="ev">跨年夜话</span></div>
+        <div class="cal-mo"><span class="mo">FEB</span><span class="ev">读书会 №&nbsp;04</span></div>
+        <div class="cal-mo"><span class="mo">MAR</span><span class="ev">参访 · 美的</span></div>
+        <div class="cal-mo" data-tone="strong"><span class="mo">APR</span><span class="ev">共赴春序</span></div>
+        <div class="cal-mo"><span class="mo">MAY</span><span class="ev">读书 №&nbsp;05</span></div>
+        <div class="cal-mo"><span class="mo">JUN</span><span class="ev">学期末 · 港大</span></div>
+        <div class="cal-mo" data-tone="future"><span class="mo">JUL</span><span class="ev">戈21 集训</span></div>
+        <div class="cal-mo" data-tone="future"><span class="mo">AUG</span><span class="ev">戈21 集训</span></div>
+        <div class="cal-mo" data-tone="accent"><span class="mo">SEP</span><span class="ev">戈21 出征</span></div>
+        <div class="cal-mo" data-tone="future"><span class="mo">OCT</span><span class="ev">读书 №&nbsp;06</span></div>
+        <div class="cal-mo" data-tone="future"><span class="mo">NOV</span><span class="ev">参访 · 字节</span></div>
+        <div class="cal-mo" data-tone="future"><span class="mo">DEC</span><span class="ev">期末</span></div>
+      </div>
+    </div>
+    <!-- 2025 -->
+    <div class="cal-row">
+      <div class="y serif"><em>20</em>25</div>
+      <div class="cal-track">
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">JAN</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">FEB</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">MAR</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">APR</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">MAY</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">JUN</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">JUL</span></div>
+        <div class="cal-mo" style="opacity:0.3;"><span class="mo">AUG</span></div>
+        <div class="cal-mo" data-tone="accent"><span class="mo">SEP</span><span class="ev">开学典礼</span></div>
+        <div class="cal-mo" data-tone="strong"><span class="mo">OCT</span><span class="ev">迎新晚宴</span></div>
+        <div class="cal-mo"><span class="mo">NOV</span><span class="ev">读书 №&nbsp;01</span></div>
+        <div class="cal-mo"><span class="mo">DEC</span><span class="ev">期末 · 北大</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="editors" data-screen-label="06 About / Editors">
+  <div class="editors-inner">
+    <div>
+      <span class="label">编辑部 / Archive Editors</span>
+      <h2 class="serif" style="margin-top:18px;">这座馆，<br/>由 7 位同学维护。</h2>
+      <p style="color:var(--ink-2);max-width:42ch;">编辑部由 8A-194 班同学自愿组成，分文字、影像、设计、技术 4 个组。所有归档由本班同学撰写、拍摄、剪辑、排版。投稿与勘误请见 <a class="linkline" href="contact.html">联系页</a>，或在公众号「8A-194 班」后台留言。</p>
+    </div>
+    <ul class="ed-list">
+      <li><span class="role">总编 · Editor</span><span class="who">王某 <small>金融 / 北京</small></span></li>
+      <li><span class="role">文字 · Words</span><span class="who">陈某 · 林某 <small>媒体 · 顾问</small></span></li>
+      <li><span class="role">影像 · Image</span><span class="who">张某 · 周某 <small>影视 · 设计</small></span></li>
+      <li><span class="role">设计 · Design</span><span class="who">李某 <small>品牌设计 / 上海</small></span></li>
+      <li><span class="role">技术 · Tech</span><span class="who">赵某 <small>互联网 / 深圳</small></span></li>
+    </ul>
+  </div>
+</section>
+
+<div data-slot="footer"></div>
+<script src="shared.js" data-page="about"></script>
+</body>
+</html>

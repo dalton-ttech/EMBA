@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>活动归档 · EMBA 8A 班级档案馆</title>
+  <link rel="stylesheet" href="tokens.css" />
+  <link rel="stylesheet" href="globals.css" />
+  <style>
+    /* ----- Page header ----- */
+    .ah {
+      padding: 80px var(--pad-page) 32px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .ah-inner { max-width: var(--container-wide); margin: 0 auto; }
+    .ah-row { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-bottom: 32px; }
+    .ah h1 { font-size: clamp(2.5rem, 6vw, 6rem); line-height: 0.95; letter-spacing: var(--tracking-display); }
+    .ah h1 em { font-style: italic; color: var(--accent); }
+    .ah .lede { color: var(--ink-2); max-width: 56ch; font-size: 1.0625rem; margin-top: 28px; }
+    .ah-meta { display: flex; gap: 32px; font-family: var(--mono); font-size: var(--fs-mono); letter-spacing: var(--tracking-mono); text-transform: uppercase; color: var(--ink-2); }
+    .ah-meta span em { font-style: normal; color: var(--accent); margin-right: 6px; }
+
+    /* Year tabs */
+    .years {
+      display: flex; gap: 0; align-items: end;
+      border-top: 1px solid var(--rule);
+      padding-top: 24px;
+    }
+    .year-tab {
+      cursor: pointer; padding: 14px 28px 14px 0;
+      font-family: var(--serif); font-size: 2rem;
+      letter-spacing: -0.01em; color: var(--ink-3);
+      border-bottom: 2px solid transparent;
+      margin-right: 32px;
+      position: relative;
+      transition: color var(--t-base) var(--ease);
+    }
+    .year-tab .y-num { font-family: var(--serif); font-size: 2.4rem; line-height: 1; }
+    .year-tab .y-count { font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); margin-left: 12px; }
+    .year-tab:hover { color: var(--ink-2); }
+    .year-tab.active { color: var(--ink); }
+    .year-tab.active::after {
+      content: ""; position: absolute; left: 0; right: 32px; bottom: -1px; height: 2px;
+      background: var(--accent);
+    }
+
+    /* Topic chips */
+    .topics {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding: 24px 0 8px;
+    }
+    .chip {
+      cursor: pointer; padding: 8px 14px;
+      font-family: var(--mono); font-size: 11px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--ink-2);
+      border: 1px solid var(--rule);
+      transition: all var(--t-base) var(--ease);
+    }
+    .chip:hover { border-color: var(--ink); color: var(--ink); }
+    .chip.on { background: var(--ink); color: var(--bone); border-color: var(--ink); }
+
+    /* ----- Image wall (per year) ----- */
+    .wall { padding: 64px var(--pad-page) 96px; }
+    .wall-inner { max-width: var(--container-wide); margin: 0 auto; }
+    .wall-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 18px;
+    }
+    .card {
+      position: relative;
+      grid-column: span 4;
+      cursor: pointer;
+      overflow: hidden;
+      transition: transform var(--t-base) var(--ease);
+    }
+    .card .ph { width: 100%; aspect-ratio: 4/3; transition: transform 1200ms var(--ease-out); }
+    .card:hover .ph { transform: scale(1.04); }
+    .card.lg { grid-column: span 6; }
+    .card.lg .ph { aspect-ratio: 4/3; }
+    .card.tall { grid-column: span 4; }
+    .card.tall .ph { aspect-ratio: 3/4; }
+    .card.wide { grid-column: span 8; }
+    .card.wide .ph { aspect-ratio: 16/9; }
+
+    .card-meta {
+      padding: 14px 0 4px;
+      display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: baseline;
+    }
+    .card-meta .num { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--ink-3); text-transform: uppercase; }
+    .card-meta .ttl { font-family: var(--serif); font-size: 1.125rem; line-height: 1.25; color: var(--ink); letter-spacing: -0.005em; }
+    .card-meta .ttl em { color: var(--accent); font-style: italic; }
+    .card-meta .topic { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); padding: 2px 8px; border: 1px solid var(--rule); }
+    .card .date {
+      position: absolute; left: 14px; top: 14px; z-index: 2;
+      font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: rgba(255,255,255,0.92);
+      padding: 6px 10px; background: rgba(0,0,0,0.34); backdrop-filter: blur(6px);
+    }
+
+    /* Year separator (sticky-ish) */
+    .year-sep {
+      grid-column: span 12;
+      display: grid; grid-template-columns: auto 1fr auto;
+      align-items: center; gap: 24px;
+      padding: 56px 0 24px;
+      border-top: 1px solid var(--rule);
+    }
+    .year-sep .y { font-family: var(--serif); font-size: 4.5rem; line-height: 1; letter-spacing: -0.03em; }
+    .year-sep .y em { font-style: italic; color: var(--accent); }
+    .year-sep .lede { font-family: var(--serif); font-size: 1.1rem; color: var(--ink-2); max-width: 60ch; }
+    .year-sep .count { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+
+    /* Empty when filter excludes everything */
+    .empty {
+      grid-column: span 12;
+      padding: 80px 0; text-align: center;
+      font-family: var(--serif); color: var(--ink-3);
+    }
+
+    /* responsive */
+    @media (max-width: 900px) {
+      .card, .card.lg, .card.wide, .card.tall { grid-column: span 12; }
+      .year-tab { font-size: 1.4rem; padding-right: 16px; margin-right: 16px; }
+      .year-tab .y-num { font-size: 1.6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div data-slot="nav"></div>
+
+<header class="ah" data-screen-label="02 Activities / Header">
+  <div class="ah-inner">
+    <div class="ah-row">
+      <div>
+        <span class="label">活动归档 / Activity archive</span>
+        <h1 class="serif" style="margin-top:18px;">三年的足迹，<br/><em>按卷归档</em>。</h1>
+        <p class="lede">从入学到毕业，36 项被记录在册的集体行动。按年份切换、按主题筛选，或翻阅整部归档。</p>
+      </div>
+      <div class="ah-meta">
+        <span><em>36</em> 归档</span>
+        <span><em>12</em> 主题</span>
+        <span><em>3</em> 年份</span>
+      </div>
+    </div>
+
+    <div class="years">
+      <div class="year-tab active" data-year="2026"><span class="y-num">2026</span><span class="y-count">14 项</span></div>
+      <div class="year-tab" data-year="2025"><span class="y-num">2025</span><span class="y-count">15 项</span></div>
+      <div class="year-tab" data-year="2024"><span class="y-num">2024</span><span class="y-count">7 项</span></div>
+      <div class="year-tab" data-year="ALL"><span class="y-num" style="font-size:1.4rem;letter-spacing:0.18em;text-transform:uppercase;font-family:var(--mono);">All / 全部</span></div>
+    </div>
+
+    <div class="topics" id="topics">
+      <div class="chip on" data-topic="ALL">全部 · All</div>
+      <div class="chip" data-topic="戈壁">戈壁 · Gobi</div>
+      <div class="chip" data-topic="读书会">读书会 · Reading</div>
+      <div class="chip" data-topic="企业参访">企业参访 · Visit</div>
+      <div class="chip" data-topic="晚宴">晚宴 · Dinner</div>
+      <div class="chip" data-topic="嘉宾">嘉宾对话 · Talk</div>
+      <div class="chip" data-topic="公益">公益 · Charity</div>
+      <div class="chip" data-topic="毕业">毕业季 · Commencement</div>
+    </div>
+  </div>
+</header>
+
+<section class="wall" data-screen-label="02 Activities / Wall">
+  <div class="wall-inner">
+    <div class="wall-grid" id="wall">
+      <!-- rendered by JS -->
+    </div>
+  </div>
+</section>
+
+<div data-slot="footer"></div>
+
+<script src="shared.js" data-page="activities"></script>
+<script>
+  // ---------- Activity dataset ----------
+  const ACTIVITIES = [
+    { id:"gobi21", year:2026, date:"2026·05·03", num:"036", topic:"戈壁", title:"跨越风沙的 121 公里 / <em>8A 班出征 2026 戈友会</em>，载誉而归", place:"敦煌 · 莫贺延碛", tone:2, size:"lg" },
+    { id:"chunxu", year:2026, date:"2026·04·18", num:"035", topic:"晚宴", title:"共赴春序 / 194 班春日草坪 <em>音乐会晚宴</em>", place:"上海 · 西郊宾馆", tone:3, size:"" },
+    { id:"hku-charity", year:2026, date:"2026·03·22", num:"034", topic:"公益", title:"为港大戈21 加油 累计捐赠 <em>¥1.33M</em>", place:"香港 · 港大", tone:4, size:"tall" },
+    { id:"reading-08", year:2026, date:"2026·02·12", num:"033", topic:"读书会", title:"读书会 №&nbsp;08 / <em>《长期主义》</em>", place:"北京 · 朗润园", tone:1, size:"" },
+    { id:"newyear-2026", year:2026, date:"2026·01·22", num:"032", topic:"晚宴", title:"<em>跨年夜话</em> / 2026 班级 New Year Eve", place:"深圳 · 蛇口", tone:2, size:"wide" },
+
+    { id:"bytedance", year:2025, date:"2025·11·06", num:"031", topic:"企业参访", title:"企业参访 №&nbsp;09 / 走进 <em>字节跳动</em> 总部", place:"北京 · 朝阳", tone:1, size:"" },
+    { id:"reading-07", year:2025, date:"2025·10·14", num:"030", topic:"读书会", title:"读书会 №&nbsp;07 / 张维迎《<em>市场与政府</em>》", place:"北京 · 朗润园", tone:3, size:"" },
+    { id:"talk-zhang", year:2025, date:"2025·09·02", num:"029", topic:"嘉宾", title:"嘉宾对话 №&nbsp;11 / <em>张维教授</em>", place:"香港 · 港大主楼", tone:2, size:"lg" },
+    { id:"gobi20", year:2025, date:"2025·05·02", num:"028", topic:"戈壁", title:"<em>戈 20</em> / 4 日 3 夜 121km 完赛", place:"敦煌 · 莫贺延碛", tone:2, size:"wide" },
+    { id:"trainsightseeing", year:2025, date:"2025·04·08", num:"027", topic:"戈壁", title:"<em>戈壁集训</em> №&nbsp;04 / 银川 黄河边的 30 公里", place:"宁夏 · 银川", tone:1, size:"tall" },
+    { id:"midea", year:2025, date:"2025·03·16", num:"026", topic:"企业参访", title:"企业参访 №&nbsp;08 / <em>美的集团</em> 工业 4.0", place:"广东 · 顺德", tone:4, size:"" },
+    { id:"newyear-2025", year:2025, date:"2025·01·19", num:"025", topic:"晚宴", title:"<em>跨年夜话</em> / 2025 班级晚宴", place:"上海 · 外滩", tone:3, size:"" },
+
+    { id:"welcome", year:2024, date:"2024·10·12", num:"007", topic:"晚宴", title:"<em>迎新晚宴</em> / 8A 启程之夜", place:"深圳 · 招商蛇口", tone:4, size:"lg" },
+    { id:"orientation", year:2024, date:"2024·09·03", num:"006", topic:"嘉宾", title:"开学典礼 / <em>港大百周年校园</em>", place:"香港 · 港大", tone:2, size:"" },
+    { id:"reading-01", year:2024, date:"2024·11·24", num:"008", topic:"读书会", title:"读书会 №&nbsp;01 / <em>《置身事内》</em>", place:"上海 · 复旦经院", tone:1, size:"tall" },
+  ];
+
+  const yearLedes = {
+    2026: "毕业之年。一支队伍同时回到敦煌、回到上海、回到长江边，把所有想做的事在最后一年再做一遍。",
+    2025: "中坚之年。戈壁、读书与参访形成节奏，每月一卷，准时归档。",
+    2024: "启程之年。从入学到第一次集体远行，这一年记下的是所有第一次。"
+  };
+
+  // ---------- Renderer ----------
+  let curYear = 2026;
+  let curTopic = "ALL";
+
+  const wallEl = document.getElementById("wall");
+
+  function render() {
+    const list = ACTIVITIES.filter(a =>
+      (curYear === "ALL" || a.year === curYear) &&
+      (curTopic === "ALL" || a.topic === curTopic)
+    );
+
+    let html = "";
+    if (curYear === "ALL") {
+      // group by year
+      const years = [...new Set(list.map(a => a.year))].sort((a,b)=>b-a);
+      years.forEach(y => {
+        const yList = list.filter(a => a.year === y);
+        html += yearSep(y, yList.length);
+        yList.forEach(a => html += card(a));
+      });
+    } else {
+      html += yearSep(curYear, list.length);
+      list.forEach(a => html += card(a));
+    }
+    if (!list.length) html = `<div class="empty">这一筛选下暂无归档 / Nothing here yet.</div>`;
+    wallEl.innerHTML = html;
+
+    // animate in
+    [...wallEl.querySelectorAll(".card")].forEach((el, i) => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(20px)";
+      requestAnimationFrame(() => {
+        el.style.transition = "opacity 700ms var(--ease-out), transform 700ms var(--ease-out)";
+        el.style.transitionDelay = `${Math.min(i, 12) * 40}ms`;
+        el.style.opacity = "1";
+        el.style.transform = "none";
+      });
+    });
+  }
+
+  function yearSep(y, n) {
+    return `
+      <div class="year-sep">
+        <div class="y serif">${String(y).slice(0,2)}<em>${String(y).slice(2)}</em></div>
+        <div class="lede serif">${yearLedes[y] || ""}</div>
+        <div class="count">${n} 项归档 · ${n} ENTRIES</div>
+      </div>`;
+  }
+
+  function card(a) {
+    const href = a.id === "gobi21" ? "activity-gobi21.html" : `activity-gobi21.html`;
+    return `
+      <a class="card ${a.size}" href="${href}">
+        <span class="date">${a.date}</span>
+        <div class="ph" data-tone="${a.tone}">
+          <span class="ph-num">№ ${a.num}</span>
+          <span class="ph-cap">${stripTags(a.title)} / ${a.place}</span>
+        </div>
+        <div class="card-meta">
+          <span class="num">№ ${a.num}</span>
+          <span class="ttl">${a.title}</span>
+          <span class="topic">${a.topic}</span>
+        </div>
+      </a>`;
+  }
+
+  function stripTags(s) { return s.replace(/<[^>]+>/g, ""); }
+
+  // bind controls
+  document.querySelectorAll(".year-tab").forEach(t => {
+    t.addEventListener("click", () => {
+      document.querySelectorAll(".year-tab").forEach(x => x.classList.remove("active"));
+      t.classList.add("active");
+      const y = t.dataset.year;
+      curYear = y === "ALL" ? "ALL" : parseInt(y);
+      render();
+    });
+  });
+  document.querySelectorAll("#topics .chip").forEach(c => {
+    c.addEventListener("click", () => {
+      document.querySelectorAll("#topics .chip").forEach(x => x.classList.remove("on"));
+      c.classList.add("on");
+      curTopic = c.dataset.topic;
+      render();
+    });
+  });
+
+  render();
+
+  // Apply ?y= and ?t= from URL
+  const params = new URLSearchParams(location.search);
+  if (params.get("y")) {
+    const yt = document.querySelector(`.year-tab[data-year="${params.get("y")}"]`);
+    if (yt) yt.click();
+  }
+  if (params.get("t")) {
+    const ct = document.querySelector(`.chip[data-topic="${params.get("t")}"]`);
+    if (ct) ct.click();
+  }
+</script>
+
+</body>
+</html>
